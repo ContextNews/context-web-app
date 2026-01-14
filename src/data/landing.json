@@ -1,0 +1,163 @@
+{
+  "South America": {
+    "stories": [
+      {
+        "title": "Amazon Deforestation Monitoring Ramps Up",
+        "location": "Manaus, Brazil",
+        "coordinates": { "lat": -3.119, "lng": -60.021 }
+      },
+      {
+        "title": "Chile Weighs Lithium Export Reforms",
+        "location": "Antofagasta, Chile",
+        "coordinates": { "lat": -23.651, "lng": -70.397 }
+      },
+      {
+        "title": "Argentina Inflation Data Pressures Central Bank",
+        "location": "Buenos Aires, Argentina",
+        "coordinates": { "lat": -34.603, "lng": -58.382 }
+      }
+    ],
+    "indices": [
+      { "name": "Bovespa (IBOVESPA)", "value": "126,850", "direction": "up" },
+      { "name": "MERVAL", "value": "1,275,200", "direction": "down" }
+    ]
+  },
+  "North America": {
+    "stories": [
+      {
+        "title": "US Manufacturing Orders Beat Forecasts",
+        "location": "Chicago, USA",
+        "coordinates": { "lat": 41.878, "lng": -87.629 }
+      },
+      {
+        "title": "Canada Housing Starts Dip",
+        "location": "Toronto, Canada",
+        "coordinates": { "lat": 43.653, "lng": -79.383 }
+      },
+      {
+        "title": "Mexico Peso Strengthens on Trade Data",
+        "location": "Monterrey, Mexico",
+        "coordinates": { "lat": 25.686, "lng": -100.316 }
+      }
+    ],
+    "indices": [
+      { "name": "S&P 500", "value": "4,982", "direction": "up" },
+      { "name": "NASDAQ Composite", "value": "15,620", "direction": "down" }
+    ]
+  },
+  "Europe": {
+    "stories": [
+      {
+        "title": "EU Energy Prices Ease Into Winter",
+        "location": "Berlin, Germany",
+        "coordinates": { "lat": 52.52, "lng": 13.405 }
+      },
+      {
+        "title": "UK Services PMI Signals Expansion",
+        "location": "London, UK",
+        "coordinates": { "lat": 51.507, "lng": -0.128 }
+      },
+      {
+        "title": "France Debates Budget Caps",
+        "location": "Paris, France",
+        "coordinates": { "lat": 48.857, "lng": 2.352 }
+      }
+    ],
+    "indices": [
+      { "name": "FTSE 100", "value": "7,605", "direction": "up" },
+      { "name": "EURO STOXX 50", "value": "4,510", "direction": "down" }
+    ]
+  },
+  "Africa": {
+    "stories": [
+      {
+        "title": "Kenya Raises Fuel Levy",
+        "location": "Nairobi, Kenya",
+        "coordinates": { "lat": -1.292, "lng": 36.822 }
+      },
+      {
+        "title": "Nigeria Central Bank Holds Rates",
+        "location": "Lagos, Nigeria",
+        "coordinates": { "lat": 6.525, "lng": 3.379 }
+      },
+      {
+        "title": "South Africa Power Talks Resume",
+        "location": "Johannesburg, South Africa",
+        "coordinates": { "lat": -26.204, "lng": 28.047 }
+      }
+    ],
+    "indices": [
+      { "name": "FTSE/JSE All Share", "value": "76,940", "direction": "up" },
+      { "name": "EGX 30", "value": "28,120", "direction": "down" }
+    ]
+  },
+  "Middle East": {
+    "stories": [
+      {
+        "title": "Gulf Gas Exports Increase",
+        "location": "Doha, Qatar",
+        "coordinates": { "lat": 25.285, "lng": 51.531 }
+      },
+      {
+        "title": "Iraq Budget Negotiations Continue",
+        "location": "Baghdad, Iraq",
+        "coordinates": { "lat": 33.315, "lng": 44.366 }
+      },
+      {
+        "title": "Israel Tech Hiring Slows",
+        "location": "Tel Aviv, Israel",
+        "coordinates": { "lat": 32.085, "lng": 34.782 }
+      }
+    ],
+    "indices": [
+      { "name": "Tadawul All Share Index (TASI)", "value": "11,420", "direction": "down" },
+      { "name": "DFM General Index", "value": "3,980", "direction": "up" }
+    ]
+  },
+  "Asia": {
+    "stories": [
+      {
+        "title": "China Factory Activity Rebounds",
+        "location": "Shanghai, China",
+        "coordinates": { "lat": 31.230, "lng": 121.473 }
+      },
+      {
+        "title": "India Digital Payments Hit Record",
+        "location": "Bengaluru, India",
+        "coordinates": { "lat": 12.971, "lng": 77.594 }
+      },
+      {
+        "title": "Japan Yields Rise on BOJ Signals",
+        "location": "Tokyo, Japan",
+        "coordinates": { "lat": 35.676, "lng": 139.65 }
+      }
+    ],
+    "indices": [
+      { "name": "Nikkei 225", "value": "36,250", "direction": "up" },
+      { "name": "Shanghai Composite", "value": "3,105", "direction": "down" }
+    ]
+  },
+  "Oceania": {
+    "stories": [
+      {
+        "title": "Australia Jobs Report Surprises",
+        "location": "Sydney, Australia",
+        "coordinates": { "lat": -33.868, "lng": 151.209 }
+      },
+      {
+        "title": "New Zealand Trade Deficit Narrows",
+        "location": "Auckland, New Zealand",
+        "coordinates": { "lat": -36.849, "lng": 174.763 }
+      },
+      {
+        "title": "Papua New Guinea Mining Talks Advance",
+        "location": "Port Moresby, Papua New Guinea",
+        "coordinates": { "lat": -9.478, "lng": 147.15 }
+      }
+    ],
+    "indices": [
+      { "name": "S&P/ASX 200", "value": "7,620", "direction": "down" },
+      { "name": "NZX 50", "value": "11,980", "direction": "up" }
+    ]
+  }
+}

@@ -14,6 +14,256 @@ body {
   height: 100vh;
 }
 
+.landing-page {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #171618;
+}
+
+.landing-nav {
+  width: 100%;
+  height: 1in;
+  border-bottom: 1px solid #404043;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.landing-nav-title {
+  color: #f5f5f5;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.landing-nav-links {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+.landing-nav-link {
+  background: none;
+  border: none;
+  color: #f5f5f5;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.landing-nav-link:hover {
+  border-bottom-color: #e21a41;
+}
+
+.landing-content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  background-image: url('/landing-bg.png');
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 100% 50%;
+}
+
+.landing-left,
+.landing-right {
+  flex: 1;
+  position: relative;
+}
+
+.landing-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-region-box {
+  color: #ffffff;
+  width: min(520px, 85%);
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: default;
+}
+
+.landing-region-fade {
+}
+
+.landing-fade-text {
+  transition: opacity 300ms ease;
+  opacity: 1;
+}
+
+.landing-region-fade .landing-fade-text {
+  opacity: 0;
+}
+
+.landing-region-row {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 12px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.landing-region-row:first-child {
+  padding-bottom: 16px;
+}
+
+.landing-region-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  border-bottom: 1px solid #ffffff;
+}
+
+.landing-story-title {
+  font-size: 12px;
+}
+
+.landing-story-location {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+.landing-region-name {
+  font-size: 18px;
+}
+
+.landing-story-row {
+  position: relative;
+  padding-left: 28px;
+  justify-content: center;
+}
+
+.landing-story-row::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  transform: translateY(-50%);
+}
+
+.landing-story-row:hover .landing-story-title {
+  text-decoration: underline;
+  text-decoration-color: #e31b41;
+  text-underline-offset: 4px;
+}
+
+.landing-placeholder-row {
+  min-height: 0;
+}
+
+.landing-actions-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding-left: 16px;
+}
+
+.landing-action-button {
+  background: none;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  padding: 8px 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.landing-action-button:hover {
+  color: #e31b41;
+  border-color: #e31b41;
+}
+
+.landing-region-indices {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.landing-index {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.landing-index-name {
+  white-space: nowrap;
+}
+
+.landing-index-value {
+  white-space: nowrap;
+}
+
+.landing-index-arrow {
+  width: 12px;
+  text-align: right;
+}
+
+.landing-index-arrow.up {
+  color: #2ecc71;
+}
+
+.landing-index-arrow.down {
+  color: #e21a41;
+}
+
+.landing-content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 9in;
+  max-width: 100%;
+  margin: 0 auto;
+  border-left: 1px solid #404043;
+  border-right: 1px solid #404043;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(3in - 1px),
+    #404043 calc(3in - 1px),
+    #404043 3in
+  );
+  background-size: 9in 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .left-panel {
   flex: 1;
   overflow-y: auto;
