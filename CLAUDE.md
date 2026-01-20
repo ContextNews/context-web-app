@@ -40,6 +40,22 @@ Falls back to local JSON files (`src/data/stories.json`, `src/data/landing.json`
 
 - **CoverageBiasBar**: Visualizes article source bias distribution (left → center → right) based on sources metadata.
 
+### Shared Utilities (`src/lib/`)
+
+- **api.js**: API URL builder with `VITE_API_BASE_URL` support
+- **constants.js**: Shared constants (`LOCATION_ALIASES`, `BIAS_ORDER`, `BIAS_LABELS`, `REGION_STOPS`)
+- **dates.js**: Date parsing/formatting utilities (`formatArticleDate`, `formatStoryDate`, `sortArticlesByDate`, etc.)
+- **normalize.js**: String normalization (`normalizeKey`, `normalizeBias`)
+
+### CSS Architecture
+
+Single stylesheet `App.css` using CSS custom properties (variables) defined in `:root`. Key variable prefixes:
+- `--color-brand`, `--color-accent-*`: Brand colors
+- `--color-bg-*`: Background colors
+- `--color-border-*`: Border colors
+- `--color-text-*`: Text colors
+- `--color-bias-*`: Bias visualization colors
+
 ### Data Structures
 
 Stories have: `story_id`, `title`, `summary`, `key_points[]`, `primary_location`, `articles[]`, `sub_stories[]`, `updated_at`

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Globe from 'react-globe.gl'
 import { feature } from 'topojson-client'
+import { REGION_STOPS } from '../lib/constants'
 import landingData from '../data/landing.json'
 
 function LandingPage() {
@@ -54,19 +55,10 @@ function LandingPage() {
 
   useEffect(() => {
     if (!globeRef.current) return
-    const stops = [
-      { name: 'South America', lat: -15, lng: -60 },
-      { name: 'North America', lat: 40, lng: -100 },
-      { name: 'Europe', lat: 54, lng: 15 },
-      { name: 'Africa', lat: 10, lng: 20 },
-      { name: 'Middle East', lat: 28, lng: 45 },
-      { name: 'Asia', lat: 35, lng: 100 },
-      { name: 'Oceania', lat: -25, lng: 140 },
-    ]
 
     let index = 0
     const move = () => {
-      const target = stops[index % stops.length]
+      const target = REGION_STOPS[index % REGION_STOPS.length]
       setCurrentRegion(target.name)
       globeRef.current.pointOfView(
         { lat: target.lat, lng: target.lng, altitude: 2 },
@@ -126,18 +118,18 @@ function LandingPage() {
                 {displayRegion}
               </div>
               <div className="landing-region-indices landing-fade-text">
-                {regionIndices.map((index) => (
-                  <div key={index.name} className="landing-index">
-                    <span className="landing-index-name">{index.name}</span>
-                    <span className="landing-index-value">{index.value}</span>
+                {regionIndices.map((idx) => (
+                  <div key={idx.name} className="landing-index">
+                    <span className="landing-index-name">{idx.name}</span>
+                    <span className="landing-index-value">{idx.value}</span>
                     <span
                       className={
-                        index.direction === 'up'
+                        idx.direction === 'up'
                           ? 'landing-index-arrow up'
                           : 'landing-index-arrow down'
                       }
                     >
-                      {index.direction === 'up' ? '▲' : '▼'}
+                      {idx.direction === 'up' ? '▲' : '▼'}
                     </span>
                   </div>
                 ))}

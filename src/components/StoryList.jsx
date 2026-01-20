@@ -1,10 +1,5 @@
+import { getStoryTimestamp } from '../lib/dates'
 import StoryCard from './StoryCard'
-
-const getStoryTimestamp = (story) => {
-  const value = story?.updated_at || story?.generated_at || ''
-  const parsed = Date.parse(value)
-  return Number.isNaN(parsed) ? 0 : parsed
-}
 
 function StoryList({ storiesData = [], loadError = '', onStorySelect }) {
   const sortedStories = [...storiesData].sort((a, b) => {

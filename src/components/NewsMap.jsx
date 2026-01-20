@@ -1,27 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
-
-const LOCATION_ALIASES = {
-  'u s': 'united states of america',
-  us: 'united states of america',
-  usa: 'united states of america',
-  'u k': 'united kingdom',
-  uk: 'united kingdom',
-  uae: 'united arab emirates',
-  'republic of korea': 'south korea',
-  'korea republic': 'south korea',
-  'north korea': 'north korea',
-  'south korea': 'south korea',
-  'russian federation': 'russia',
-  'czech republic': 'czechia',
-}
-
-const normalizeKey = (value) =>
-  value
-    .toLowerCase()
-    .replace(/[.]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+import { LOCATION_ALIASES } from '../lib/constants'
+import { normalizeKey } from '../lib/normalize'
 
 const getGeometryBounds = (geometry) => {
   let minX = Infinity

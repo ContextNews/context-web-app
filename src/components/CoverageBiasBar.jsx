@@ -1,32 +1,6 @@
 import { useMemo } from 'react'
-
-const BIAS_ORDER = ['left', 'leans-left', 'center', 'leans-right', 'right']
-
-const BIAS_LABELS = {
-  left: 'Left',
-  'leans-left': 'Leans left',
-  center: 'Center',
-  'leans-right': 'Leans right',
-  right: 'Right',
-}
-
-const normalizeKey = (value) => (value || '').toString().trim().toLowerCase()
-
-const normalizeBias = (bias) => {
-  const normalized = normalizeKey(bias).replace(/_/g, '-')
-  if (!normalized) return null
-  if (normalized === 'centre') return 'center'
-  if (normalized === 'lean-left') return 'leans-left'
-  if (normalized === 'lean-right') return 'leans-right'
-  if (normalized === 'left-lean' || normalized === 'left-leaning') {
-    return 'leans-left'
-  }
-  if (normalized === 'right-lean' || normalized === 'right-leaning') {
-    return 'leans-right'
-  }
-  if (BIAS_ORDER.includes(normalized)) return normalized
-  return null
-}
+import { BIAS_ORDER, BIAS_LABELS } from '../lib/constants'
+import { normalizeKey, normalizeBias } from '../lib/normalize'
 
 function CoverageBiasBar({ articles, sources }) {
   const { counts, total } = useMemo(() => {

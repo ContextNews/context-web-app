@@ -1,50 +1,15 @@
-const sortByPublishedDate = (articles) => {
-  const getTimestamp = (article) => {
-    const value =
-      article.published_at ||
-      article.publishedAt ||
-      article.published_date ||
-      article.publishedDate ||
-      article.date ||
-      ''
-    const parsed = Date.parse(value)
-    return Number.isNaN(parsed) ? 0 : parsed
-  }
-
-  return [...articles].sort((a, b) => getTimestamp(b) - getTimestamp(a))
-}
-
-const formatDate = (article) => {
-  const value =
-    article.published_at ||
-    article.publishedAt ||
-    article.published_date ||
-    article.publishedDate ||
-    article.date ||
-    ''
-  const parsed = Date.parse(value)
-  if (Number.isNaN(parsed)) return null
-  return new Date(parsed).toLocaleDateString()
-}
-
 import { useState } from 'react'
+import { sortArticlesByDate, formatArticleDate, formatStoryDate } from '../lib/dates'
 import CoverageBiasBar from './CoverageBiasBar'
-
-const formatStoryDate = (value) => {
-  if (!value) return null
-  const parsed = Date.parse(value)
-  if (Number.isNaN(parsed)) return null
-  return new Date(parsed).toLocaleString()
-}
 
 function StoryView({ story, onBack, sourcesData }) {
   if (!story) return null
 
-  const sortedArticles = sortByPublishedDate(story.articles || [])
+  const sortedArticles = sortArticlesByDate(story.articles || [])
   const [activeTab, setActiveTab] = useState('overview')
   const summary = story.summary || ''
   const keyPoints = Array.isArray(story.key_points) ? story.key_points : []
-  const updatedLabel = formatStoryDate(story.updated_at || story.generated_at)
+  const updatedLabel = formatStoryDate(story)
 
   return (
     <div className="story-view">
@@ -125,7 +90,7 @@ function StoryView({ story, onBack, sourcesData }) {
             />
             <div className="story-view-list">
               {sortedArticles.map((article) => {
-                const dateLabel = formatDate(article)
+                const dateLabel = formatArticleDate(article)
                 return (
                   <div key={article.article_id} className="story-view-item">
                     <div className="story-view-headline">
