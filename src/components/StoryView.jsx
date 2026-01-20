@@ -28,6 +28,7 @@ const formatDate = (article) => {
 }
 
 import { useState } from 'react'
+import CoverageBiasBar from './CoverageBiasBar'
 
 const formatStoryDate = (value) => {
   if (!value) return null
@@ -36,7 +37,7 @@ const formatStoryDate = (value) => {
   return new Date(parsed).toLocaleString()
 }
 
-function StoryView({ story, onBack }) {
+function StoryView({ story, onBack, sourcesData }) {
   if (!story) return null
 
   const sortedArticles = sortByPublishedDate(story.articles || [])
@@ -117,21 +118,31 @@ function StoryView({ story, onBack }) {
             ) : null}
           </div>
         ) : (
-          <div className="story-view-list">
-            {sortedArticles.map((article) => {
-              const dateLabel = formatDate(article)
-              return (
-                <div key={article.article_id} className="story-view-item">
-                  <div className="story-view-headline">{article.headline}</div>
-                  <div className="story-view-meta">
-                    <span className="story-view-source">{article.source}</span>
-                    {dateLabel ? (
-                      <span className="story-view-date">{dateLabel}</span>
-                    ) : null}
+          <div className="story-view-coverage">
+            <CoverageBiasBar
+              articles={sortedArticles}
+              sources={sourcesData}
+            />
+            <div className="story-view-list">
+              {sortedArticles.map((article) => {
+                const dateLabel = formatDate(article)
+                return (
+                  <div key={article.article_id} className="story-view-item">
+                    <div className="story-view-headline">
+                      {article.headline}
+                    </div>
+                    <div className="story-view-meta">
+                      <span className="story-view-source">
+                        {article.source}
+                      </span>
+                      {dateLabel ? (
+                        <span className="story-view-date">{dateLabel}</span>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
           </div>
         )}
       </div>

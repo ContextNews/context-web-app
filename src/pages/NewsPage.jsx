@@ -9,6 +9,7 @@ function NewsPage() {
   const [storiesData, setStoriesData] = useState([])
   const [loadError, setLoadError] = useState('')
   const [selectedStory, setSelectedStory] = useState(null)
+  const [sourcesData, setSourcesData] = useState([])
 
   useEffect(() => {
     let isMounted = true
@@ -44,6 +45,39 @@ function NewsPage() {
     }
   }, [])
 
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadSources() {
+      if (!hasApiBase) {
+        setSourcesData([])
+        return
+      }
+
+      try {
+        const response = await fetch(buildApiUrl('/sources_data'))
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`)
+        }
+        const data = await response.json()
+
+        if (isMounted) {
+          setSourcesData(Array.isArray(data) ? data : [])
+        }
+      } catch (error) {
+        if (isMounted) {
+          setSourcesData([])
+        }
+      }
+    }
+
+    loadSources()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   return (
     <div className="app-container news-page">
       <div className="landing-nav">
@@ -55,6 +89,7 @@ function NewsPage() {
             <StoryView
               story={selectedStory}
               onBack={() => setSelectedStory(null)}
+              sourcesData={sourcesData}
             />
           ) : (
             <StoryList
