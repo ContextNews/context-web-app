@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
-import { BIAS_ORDER, BIAS_LABELS } from '../lib/constants'
-import { normalizeKey, normalizeBias } from '../lib/normalize'
+import { BIAS_ORDER, BIAS_LABELS } from '../../lib/constants'
+import { normalizeKey, normalizeBias } from '../../lib/normalize'
 import styles from './CoverageBiasBar.module.css'
 
 const SEGMENT_CLASSES = {

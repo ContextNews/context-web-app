@@ -1,5 +1,5 @@
-import { getStoryTimestamp } from '../lib/dates'
-import StoryCard from './StoryCard'
+import { getStoryTimestamp } from '../../lib/dates'
+import StoryCard from '../StoryCard'
 import styles from './StoryList.module.css'
 
 function StoryList({ storiesData = [], loadError = '', onStorySelect }) {

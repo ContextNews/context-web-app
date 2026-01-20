@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Globe from 'react-globe.gl'
 import { feature } from 'topojson-client'
-import { REGION_STOPS } from '../lib/constants'
-import landingData from '../data/landing.json'
+import { REGION_STOPS } from '../../lib/constants'
+import landingData from '../../data/landing.json'
 import styles from './LandingPage.module.css'
 
 function LandingPage() {

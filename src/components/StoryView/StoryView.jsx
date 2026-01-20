@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { sortArticlesByDate, formatArticleDate, formatStoryDate } from '../lib/dates'
-import CoverageBiasBar from './CoverageBiasBar'
+import { sortArticlesByDate, formatArticleDate, formatStoryDate } from '../../lib/dates'
+import CoverageBiasBar from '../CoverageBiasBar'
 import styles from './StoryView.module.css'
 
 function StoryView({ story, onBack, sourcesData }) {

@@ -47,12 +47,33 @@ Falls back to local JSON files (`src/data/stories.json`, `src/data/landing.json`
 - **dates.js**: Date parsing/formatting utilities (`formatArticleDate`, `formatStoryDate`, `sortArticlesByDate`, etc.)
 - **normalize.js**: String normalization (`normalizeKey`, `normalizeBias`)
 
+### Project Structure
+
+Uses directory-per-component pattern with CSS Modules:
+
+```
+src/
+  components/
+    ComponentName/
+      ComponentName.jsx
+      ComponentName.module.css
+      index.js              # re-exports for cleaner imports
+  pages/
+    PageName/
+      PageName.jsx
+      PageName.module.css
+      index.js
+  lib/                      # shared utilities
+  styles/
+    globals.css             # CSS variables and reset
+```
+
 ### CSS Architecture
 
 Uses CSS Modules for component-scoped styles with shared CSS variables:
 
 - **`src/styles/globals.css`**: CSS custom properties and reset (imported in `main.jsx`)
-- **`*.module.css`**: Component/page-specific styles (co-located with each component)
+- **`*.module.css`**: Component/page-specific styles (co-located in each component directory)
 
 Key CSS variable prefixes in `:root`:
 - `--color-brand`, `--color-accent-*`: Brand colors

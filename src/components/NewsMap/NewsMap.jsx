@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
-import { LOCATION_ALIASES } from '../lib/constants'
-import { normalizeKey } from '../lib/normalize'
+import { LOCATION_ALIASES } from '../../lib/constants'
+import { normalizeKey } from '../../lib/normalize'
 import styles from './NewsMap.module.css'
 
 const getGeometryBounds = (geometry) => {

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import NewsMap from '../components/NewsMap'
-import StoryList from '../components/StoryList'
-import StoryView from '../components/StoryView'
-import stories from '../data/stories.json'
-import { buildApiUrl, hasApiBase } from '../lib/api'
+import NewsMap from '../../components/NewsMap'
+import StoryList from '../../components/StoryList'
+import StoryView from '../../components/StoryView'
+import stories from '../../data/stories.json'
+import { buildApiUrl, hasApiBase } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
 function NewsPage() {
