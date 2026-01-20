@@ -1,0 +1,53 @@
+:root {
+  /* Brand colors */
+  --color-brand: #e21a41;
+  --color-accent-blue: #7ecbff;
+
+  /* Background colors */
+  --color-bg-dark: #171618;
+  --color-bg-darker: #121114;
+  --color-bg-light: #f5f5f5;
+  --color-bg-panel: #fafafa;
+
+  /* Border colors */
+  --color-border: #404043;
+  --color-border-light: #ddd;
+  --color-border-dark: #26252a;
+
+  /* Text colors */
+  --color-text-light: #f5f5f5;
+  --color-text-muted: #8b8a90;
+  --color-text-secondary: #b2b1b6;
+  --color-text-body: #d2d1d6;
+
+  /* Map gradient colors */
+  --color-map-top: #1c1b1f;
+  --color-map-mid: #141317;
+  --color-map-bottom: #0d0c0f;
+
+  /* Hover states */
+  --color-hover-dark: #1f1e22;
+
+  /* Bias colors */
+  --color-bias-left: #e21a41;
+  --color-bias-leans-left: rgba(226, 26, 65, 0.45);
+  --color-bias-center: #f5f5f5;
+  --color-bias-leans-right: rgba(126, 203, 255, 0.45);
+  --color-bias-right: #7ecbff;
+  --color-bias-bar-bg: #0f0e11;
+
+  /* Utility colors */
+  --color-white: #ffffff;
+  --color-success: #2ecc71;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background: var(--color-bg-light);
+}

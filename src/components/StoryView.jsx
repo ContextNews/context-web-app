@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { sortArticlesByDate, formatArticleDate, formatStoryDate } from '../lib/dates'
 import CoverageBiasBar from './CoverageBiasBar'
+import styles from './StoryView.module.css'
 
 function StoryView({ story, onBack, sourcesData }) {
   if (!story) return null
@@ -12,66 +13,58 @@ function StoryView({ story, onBack, sourcesData }) {
   const updatedLabel = formatStoryDate(story)
 
   return (
-    <div className="story-view">
-      <div className="story-view-title-row">
-        <h2 className="story-view-title">{story.title}</h2>
+    <div className={styles.container}>
+      <div className={styles.titleRow}>
+        <h2 className={styles.title}>{story.title}</h2>
       </div>
-      <div className="story-view-controls">
+      <div className={styles.controls}>
         <button
           type="button"
-          className="story-view-back"
+          className={styles.back}
           onClick={onBack}
           aria-label="Back to stories"
         >
-          <span className="story-view-back-icon" aria-hidden="true" />
+          <span className={styles.backIcon} aria-hidden="true" />
         </button>
-        <div className="story-view-tabs">
+        <div className={styles.tabs}>
           <button
             type="button"
-            className={
-              activeTab === 'overview'
-                ? 'story-view-tab active'
-                : 'story-view-tab'
-            }
+            className={`${styles.tab} ${activeTab === 'overview' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('overview')}
           >
             Overview
           </button>
           <button
             type="button"
-            className={
-              activeTab === 'coverage'
-                ? 'story-view-tab active'
-                : 'story-view-tab'
-            }
+            className={`${styles.tab} ${activeTab === 'coverage' ? styles.tabActive : ''}`}
             onClick={() => setActiveTab('coverage')}
           >
             Coverage
           </button>
         </div>
       </div>
-      <div className="story-view-content">
+      <div className={styles.content}>
         {activeTab === 'overview' ? (
-          <div className="story-view-overview">
+          <div className={styles.overview}>
             {summary ? (
-              <p className="story-view-summary">{summary}</p>
+              <p className={styles.summary}>{summary}</p>
             ) : (
-              <p className="story-view-summary">Summary pending.</p>
+              <p className={styles.summary}>Summary pending.</p>
             )}
-            <div className="story-view-info">
+            <div className={styles.info}>
               {story.primary_location ? (
-                <div className="story-view-info-item">
-                  <span className="story-view-info-label">Location</span>
-                  <span className="story-view-info-value">
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Location</span>
+                  <span className={styles.infoValue}>
                     {story.primary_location}
                   </span>
                 </div>
               ) : null}
             </div>
             {keyPoints.length ? (
-              <div className="story-view-points">
-                <div className="story-view-points-title">Key points</div>
-                <ul className="story-view-points-list">
+              <div>
+                <div className={styles.pointsTitle}>Key points</div>
+                <ul className={styles.pointsList}>
                   {keyPoints.map((point, index) => (
                     <li key={`${story.story_id}-point-${index}`}>{point}</li>
                   ))}
@@ -79,30 +72,26 @@ function StoryView({ story, onBack, sourcesData }) {
               </div>
             ) : null}
             {updatedLabel ? (
-              <div className="story-view-updated">Updated {updatedLabel}</div>
+              <div className={styles.updated}>Updated {updatedLabel}</div>
             ) : null}
           </div>
         ) : (
-          <div className="story-view-coverage">
+          <div className={styles.coverage}>
             <CoverageBiasBar
               articles={sortedArticles}
               sources={sourcesData}
             />
-            <div className="story-view-list">
+            <div className={styles.list}>
               {sortedArticles.map((article) => {
                 const dateLabel = formatArticleDate(article)
                 return (
-                  <div key={article.article_id} className="story-view-item">
-                    <div className="story-view-headline">
+                  <div key={article.article_id} className={styles.item}>
+                    <div className={styles.headline}>
                       {article.headline}
                     </div>
-                    <div className="story-view-meta">
-                      <span className="story-view-source">
-                        {article.source}
-                      </span>
-                      {dateLabel ? (
-                        <span className="story-view-date">{dateLabel}</span>
-                      ) : null}
+                    <div className={styles.meta}>
+                      <span>{article.source}</span>
+                      {dateLabel ? <span>{dateLabel}</span> : null}
                     </div>
                   </div>
                 )

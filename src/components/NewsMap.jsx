@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps'
 import { LOCATION_ALIASES } from '../lib/constants'
 import { normalizeKey } from '../lib/normalize'
+import styles from './NewsMap.module.css'
 
 const getGeometryBounds = (geometry) => {
   let minX = Infinity
@@ -98,10 +99,10 @@ function NewsMap({ stories = [], locationOverrides = {} }) {
   }, [stories, countryIndex, locationOverrides])
 
   return (
-    <div className="news-map">
-      <div className="news-map-canvas">
+    <div className={styles.container}>
+      <div className={styles.canvas}>
         <ComposableMap
-          className="news-map-svg"
+          className={styles.svg}
           projection="geoMercator"
           projectionConfig={{ scale: 165, center: [0, 23] }}
           width={720}
@@ -113,14 +114,14 @@ function NewsMap({ stories = [], locationOverrides = {} }) {
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
-                  className="news-map-geography"
+                  className={styles.geography}
                 />
               ))
             }
           </Geographies>
           {markers.map((marker) => (
             <Marker key={marker.key} coordinates={marker.coordinates}>
-              <circle r={marker.size} className="news-map-marker-dot" />
+              <circle r={marker.size} className={styles.markerDot} />
             </Marker>
           ))}
         </ComposableMap>

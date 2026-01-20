@@ -1,5 +1,6 @@
 import { getStoryTimestamp } from '../lib/dates'
 import StoryCard from './StoryCard'
+import styles from './StoryList.module.css'
 
 function StoryList({ storiesData = [], loadError = '', onStorySelect }) {
   const sortedStories = [...storiesData].sort((a, b) => {
@@ -9,9 +10,9 @@ function StoryList({ storiesData = [], loadError = '', onStorySelect }) {
   })
 
   return (
-    <div className="story-list">
+    <div className={styles.container}>
       {loadError ? (
-        <div className="story-list-error">
+        <div className={styles.error}>
           Unable to load stories from the API. Showing local data instead.
         </div>
       ) : null}

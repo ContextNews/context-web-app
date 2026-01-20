@@ -49,7 +49,12 @@ Falls back to local JSON files (`src/data/stories.json`, `src/data/landing.json`
 
 ### CSS Architecture
 
-Single stylesheet `App.css` using CSS custom properties (variables) defined in `:root`. Key variable prefixes:
+Uses CSS Modules for component-scoped styles with shared CSS variables:
+
+- **`src/styles/globals.css`**: CSS custom properties and reset (imported in `main.jsx`)
+- **`*.module.css`**: Component/page-specific styles (co-located with each component)
+
+Key CSS variable prefixes in `:root`:
 - `--color-brand`, `--color-accent-*`: Brand colors
 - `--color-bg-*`: Background colors
 - `--color-border-*`: Border colors

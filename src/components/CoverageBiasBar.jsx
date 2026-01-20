@@ -1,6 +1,23 @@
 import { useMemo } from 'react'
 import { BIAS_ORDER, BIAS_LABELS } from '../lib/constants'
 import { normalizeKey, normalizeBias } from '../lib/normalize'
+import styles from './CoverageBiasBar.module.css'
+
+const SEGMENT_CLASSES = {
+  left: styles.segmentLeft,
+  'leans-left': styles.segmentLeansLeft,
+  center: styles.segmentCenter,
+  'leans-right': styles.segmentLeansRight,
+  right: styles.segmentRight,
+}
+
+const SWATCH_CLASSES = {
+  left: styles.swatchLeft,
+  'leans-left': styles.swatchLeansLeft,
+  center: styles.swatchCenter,
+  'leans-right': styles.swatchLeansRight,
+  right: styles.swatchRight,
+}
 
 function CoverageBiasBar({ articles, sources }) {
   const { counts, total } = useMemo(() => {
@@ -36,10 +53,10 @@ function CoverageBiasBar({ articles, sources }) {
   }, [articles, sources])
 
   return (
-    <div className="coverage-bias">
-      <div className="coverage-bias-title">Coverage bias</div>
+    <div className={styles.container}>
+      <div className={styles.title}>Coverage bias</div>
       <div
-        className="coverage-bias-bar"
+        className={styles.bar}
         role="img"
         aria-label="Coverage bias distribution"
       >
@@ -50,21 +67,21 @@ function CoverageBiasBar({ articles, sources }) {
             return (
               <div
                 key={key}
-                className={`coverage-bias-segment ${key}`}
-                style={{ flexGrow: count, flexBasis: 0 }}
+                className={`${styles.segment} ${SEGMENT_CLASSES[key]}`}
+                style={{ flexGrow: count }}
                 aria-hidden="true"
               />
             )
           })
         ) : (
-          <div className="coverage-bias-empty">No bias data</div>
+          <div className={styles.empty}>No bias data</div>
         )}
       </div>
-      <div className="coverage-bias-legend">
+      <div className={styles.legend}>
         {BIAS_ORDER.map((key) => (
-          <div key={key} className="coverage-bias-legend-item">
-            <span className={`coverage-bias-swatch ${key}`} aria-hidden="true" />
-            <span className="coverage-bias-label">
+          <div key={key} className={styles.legendItem}>
+            <span className={`${styles.swatch} ${SWATCH_CLASSES[key]}`} aria-hidden="true" />
+            <span>
               {BIAS_LABELS[key]}
               {total > 0 ? ` (${counts[key]})` : ''}
             </span>

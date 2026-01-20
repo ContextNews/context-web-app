@@ -1,0 +1,248 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: var(--color-bg-dark);
+}
+
+.nav {
+  width: 100%;
+  height: 1in;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.navTitle {
+  color: var(--color-text-light);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.navLinks {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+.navLink {
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+}
+
+.navLink:hover {
+  border-bottom-color: var(--color-brand);
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  background-image: url('/landing-bg.png');
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 100% 50%;
+}
+
+.content::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 9in;
+  max-width: 100%;
+  margin: 0 auto;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(3in - 1px),
+    var(--color-border) calc(3in - 1px),
+    var(--color-border) 3in
+  );
+  background-size: 9in 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.left,
+.right {
+  flex: 1;
+  position: relative;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.regionBox {
+  color: var(--color-white);
+  width: min(520px, 85%);
+  display: grid;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: default;
+}
+
+.fadeText {
+  transition: opacity 300ms ease;
+  opacity: 1;
+}
+
+.regionFade .fadeText {
+  opacity: 0;
+}
+
+.regionRow {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 12px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.regionRow:first-child {
+  padding-bottom: 16px;
+}
+
+.regionHeader {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  border-bottom: 1px solid var(--color-white);
+}
+
+.regionName {
+  font-size: 18px;
+}
+
+.regionIndices {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.index {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.indexName {
+  white-space: nowrap;
+}
+
+.indexValue {
+  white-space: nowrap;
+}
+
+.indexArrow {
+  width: 12px;
+  text-align: right;
+}
+
+.indexArrowUp {
+  color: var(--color-success);
+}
+
+.indexArrowDown {
+  color: var(--color-brand);
+}
+
+.storyRow {
+  position: relative;
+  padding-left: 28px;
+  justify-content: center;
+}
+
+.storyRow::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-white);
+  transform: translateY(-50%);
+}
+
+.storyRow:hover .storyTitle {
+  text-decoration: underline;
+  text-decoration-color: var(--color-brand);
+  text-underline-offset: 4px;
+}
+
+.storyTitle {
+  font-size: 12px;
+}
+
+.storyLocation {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+.placeholderRow {
+  min-height: 0;
+}
+
+.actionsRow {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding-left: 16px;
+}
+
+.actionButton {
+  background: none;
+  border: 1px solid var(--color-white);
+  color: var(--color-white);
+  padding: 8px 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.actionButton:hover {
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+}

@@ -1,3 +1,5 @@
+import styles from './StoryCard.module.css'
+
 function StoryCard({ story, onSelect }) {
   const sourceCount = new Set(story.articles.map((article) => article.source)).size
   const handleSelect = () => {
@@ -7,9 +9,9 @@ function StoryCard({ story, onSelect }) {
   }
 
   return (
-    <div className="story-card-group">
+    <div className={styles.group}>
       <div
-        className="story-card"
+        className={styles.card}
         role="button"
         tabIndex={0}
         onClick={handleSelect}
@@ -20,28 +22,28 @@ function StoryCard({ story, onSelect }) {
           }
         }}
       >
-        <div className="story-media" />
-        <div className="story-content">
-          <div className="story-row story-title-row">
-            <div className="story-title-block">
-              <h2 className="story-title">{story.title}</h2>
+        <div className={styles.media} />
+        <div className={styles.content}>
+          <div className={`${styles.row} ${styles.titleRow}`}>
+            <div className={styles.titleBlock}>
+              <h2 className={styles.title}>{story.title}</h2>
               {story.primary_location ? (
-                <span className="story-location">{story.primary_location}</span>
+                <span className={styles.location}>{story.primary_location}</span>
               ) : null}
             </div>
           </div>
-          <div className="story-row story-meta-row">
-            <div className="story-meta-left">
-              <span className="story-meta">
+          <div className={`${styles.row} ${styles.metaRow}`}>
+            <div className={styles.metaLeft}>
+              <span className={styles.meta}>
                 {story.articles.length} article
                 {story.articles.length !== 1 ? 's' : ''}
               </span>
-              <span className="story-meta">
+              <span className={styles.meta}>
                 {sourceCount} source{sourceCount !== 1 ? 's' : ''}
               </span>
             </div>
-            <div className="story-meta-right" aria-hidden="true">
-              <span className="story-meta-chevron" />
+            <div className={styles.metaRight} aria-hidden="true">
+              <span className={styles.chevron} />
             </div>
           </div>
         </div>
@@ -49,10 +51,10 @@ function StoryCard({ story, onSelect }) {
       {story.sub_stories?.map((subStory, index) => (
         <div
           key={subStory.story_id}
-          className={index === 0 ? 'sub-story-row first' : 'sub-story-row'}
+          className={`${styles.subStoryRow} ${index === 0 ? styles.subStoryRowFirst : ''}`}
         >
-          <div className="sub-story-connector" aria-hidden="true" />
-          <div className="sub-story-card">{subStory.title}</div>
+          <div className={styles.subStoryConnector} aria-hidden="true" />
+          <div className={styles.subStoryCard}>{subStory.title}</div>
         </div>
       ))}
     </div>

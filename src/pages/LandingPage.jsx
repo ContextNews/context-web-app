@@ -3,6 +3,7 @@ import Globe from 'react-globe.gl'
 import { feature } from 'topojson-client'
 import { REGION_STOPS } from '../lib/constants'
 import landingData from '../data/landing.json'
+import styles from './LandingPage.module.css'
 
 function LandingPage() {
   const globeRef = useRef(null)
@@ -83,51 +84,45 @@ function LandingPage() {
   }, [currentRegion])
 
   return (
-    <div className="app-container landing-page">
-      <div className="landing-nav">
-        <div className="landing-nav-title">Context</div>
-        <div className="landing-nav-links">
-          <button type="button" className="landing-nav-link">
+    <div className={styles.container}>
+      <div className={styles.nav}>
+        <div className={styles.navTitle}>Context</div>
+        <div className={styles.navLinks}>
+          <button type="button" className={styles.navLink}>
             Politics
           </button>
-          <button type="button" className="landing-nav-link">
+          <button type="button" className={styles.navLink}>
             Economics
           </button>
-          <button type="button" className="landing-nav-link">
+          <button type="button" className={styles.navLink}>
             Finance
           </button>
-          <button type="button" className="landing-nav-link">
+          <button type="button" className={styles.navLink}>
             Business
           </button>
-          <button type="button" className="landing-nav-link">
+          <button type="button" className={styles.navLink}>
             Conflict
           </button>
         </div>
       </div>
-      <div className="landing-content">
-        <div className="landing-left">
+      <div className={styles.content}>
+        <div className={styles.left}>
           <div
-            className={
-              isFading
-                ? 'landing-region-box landing-region-fade'
-                : 'landing-region-box'
-            }
+            className={`${styles.regionBox} ${isFading ? styles.regionFade : ''}`}
           >
-            <div className="landing-region-row landing-region-header">
-              <div className="landing-region-name landing-fade-text">
+            <div className={`${styles.regionRow} ${styles.regionHeader}`}>
+              <div className={`${styles.regionName} ${styles.fadeText}`}>
                 {displayRegion}
               </div>
-              <div className="landing-region-indices landing-fade-text">
+              <div className={`${styles.regionIndices} ${styles.fadeText}`}>
                 {regionIndices.map((idx) => (
-                  <div key={idx.name} className="landing-index">
-                    <span className="landing-index-name">{idx.name}</span>
-                    <span className="landing-index-value">{idx.value}</span>
+                  <div key={idx.name} className={styles.index}>
+                    <span className={styles.indexName}>{idx.name}</span>
+                    <span className={styles.indexValue}>{idx.value}</span>
                     <span
-                      className={
-                        idx.direction === 'up'
-                          ? 'landing-index-arrow up'
-                          : 'landing-index-arrow down'
-                      }
+                      className={`${styles.indexArrow} ${
+                        idx.direction === 'up' ? styles.indexArrowUp : styles.indexArrowDown
+                      }`}
                     >
                       {idx.direction === 'up' ? '▲' : '▼'}
                     </span>
@@ -136,27 +131,27 @@ function LandingPage() {
               </div>
             </div>
             {regionStories.slice(0, 3).map((story) => (
-              <div key={story.title} className="landing-region-row landing-story-row">
-                <div className="landing-story-title landing-fade-text">
+              <div key={story.title} className={`${styles.regionRow} ${styles.storyRow}`}>
+                <div className={`${styles.storyTitle} ${styles.fadeText}`}>
                   {story.title}
                 </div>
-                <div className="landing-story-location landing-fade-text">
+                <div className={`${styles.storyLocation} ${styles.fadeText}`}>
                   {story.location}
                 </div>
               </div>
             ))}
-            <div className="landing-region-row landing-placeholder-row" />
-            <div className="landing-region-row landing-actions-row">
-              <a href="/news" className="landing-action-button">
+            <div className={`${styles.regionRow} ${styles.placeholderRow}`} />
+            <div className={`${styles.regionRow} ${styles.actionsRow}`}>
+              <a href="/news" className={styles.actionButton}>
                 NEWS
               </a>
-              <button type="button" className="landing-action-button">
+              <button type="button" className={styles.actionButton}>
                 DATA
               </button>
             </div>
           </div>
         </div>
-        <div className="landing-right">
+        <div className={styles.right}>
           <Globe
             ref={globeRef}
             width={globeSize}

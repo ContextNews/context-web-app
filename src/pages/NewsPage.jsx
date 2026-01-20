@@ -4,6 +4,7 @@ import StoryList from '../components/StoryList'
 import StoryView from '../components/StoryView'
 import stories from '../data/stories.json'
 import { buildApiUrl, hasApiBase } from '../lib/api'
+import styles from './NewsPage.module.css'
 
 function NewsPage() {
   const [storiesData, setStoriesData] = useState([])
@@ -79,12 +80,12 @@ function NewsPage() {
   }, [])
 
   return (
-    <div className="app-container news-page">
-      <div className="landing-nav">
-        <div className="landing-nav-title">Context</div>
+    <div className={styles.container}>
+      <div className={styles.nav}>
+        <div className={styles.navTitle}>Context</div>
       </div>
-      <div className="news-content">
-        <div className="left-panel">
+      <div className={styles.content}>
+        <div className={styles.leftPanel}>
           {selectedStory ? (
             <StoryView
               story={selectedStory}
@@ -99,11 +100,11 @@ function NewsPage() {
             />
           )}
         </div>
-        <div className="right-panel">
-          <div className="news-right-top">
+        <div className={styles.rightPanel}>
+          <div className={styles.rightTop}>
             <NewsMap stories={storiesData} />
           </div>
-          <div className="news-right-bottom" />
+          <div className={styles.rightBottom} />
         </div>
       </div>
     </div>

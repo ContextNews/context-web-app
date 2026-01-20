@@ -1,0 +1,41 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--color-text-light);
+  min-height: 0;
+}
+
+.canvas {
+  flex: 1;
+  align-self: center;
+  width: min(100%, 980px);
+  border: 1px solid var(--color-border);
+  background: radial-gradient(circle at top, var(--color-map-top) 0%, var(--color-map-mid) 55%, var(--color-map-bottom) 100%);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.geography {
+  fill: var(--color-map-mid);
+  stroke: var(--color-border);
+  stroke-width: 0.5;
+  outline: none;
+}
+
+.geography:hover {
+  fill: var(--color-hover-dark);
+}
+
+.markerDot {
+  fill: rgba(126, 203, 255, 0.35);
+  stroke: var(--color-accent-blue);
+  stroke-width: 1.2;
+}
