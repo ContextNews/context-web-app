@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { BIAS_ORDER, BIAS_LABELS } from '../../lib/constants'
-import { normalizeKey, normalizeBias } from '../../lib/normalize'
+import { buildSourceGroupBiasMap, getSourceGroupKey } from '../../lib/sources'
 import styles from './CoverageBiasBar.module.css'
 
 const SEGMENT_CLASSES = {
@@ -21,28 +21,24 @@ const SWATCH_CLASSES = {
 
 function CoverageBiasBar({ articles, sources }) {
   const { counts, total } = useMemo(() => {
-    const biasCounts = BIAS_ORDER.reduce((acc, key) => {
-      acc[key] = 0
+    const biasGroups = BIAS_ORDER.reduce((acc, key) => {
+      acc[key] = new Set()
       return acc
     }, {})
-    const sourceLookup = new Map()
-
-    ;(sources || []).forEach((source) => {
-      const bias = normalizeBias(source?.bias)
-      if (!bias) return
-      const sourceKey = normalizeKey(source?.source)
-      const nameKey = normalizeKey(source?.name)
-      if (sourceKey) sourceLookup.set(sourceKey, bias)
-      if (nameKey) sourceLookup.set(nameKey, bias)
-    })
+    const biasByGroup = buildSourceGroupBiasMap(sources || [])
 
     ;(articles || []).forEach((article) => {
-      const key = normalizeKey(article?.source)
-      if (!key) return
-      const bias = sourceLookup.get(key)
+      const groupKey = getSourceGroupKey(article?.source)
+      if (!groupKey) return
+      const bias = biasByGroup.get(groupKey)
       if (!bias) return
-      biasCounts[bias] += 1
+      biasGroups[bias].add(groupKey)
     })
+
+    const biasCounts = BIAS_ORDER.reduce((acc, key) => {
+      acc[key] = biasGroups[key].size
+      return acc
+    }, {})
 
     const totalCount = Object.values(biasCounts).reduce(
       (sum, value) => sum + value,

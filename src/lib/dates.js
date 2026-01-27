@@ -12,7 +12,8 @@ const ARTICLE_DATE_FIELDS = [
 /**
  * Common date field names used across story objects
  */
-const STORY_DATE_FIELDS = ['updated_at', 'generated_at']
+const STORY_SORT_FIELDS = ['story_period', 'updated_at', 'generated_at']
+const STORY_DISPLAY_FIELDS = ['updated_at', 'generated_at', 'story_period']
 
 /**
  * Extract a date value from an object by checking multiple possible field names
@@ -46,7 +47,7 @@ export function getArticleTimestamp(article) {
  * Get timestamp from a story object
  */
 export function getStoryTimestamp(story) {
-  const value = extractDateValue(story, STORY_DATE_FIELDS)
+  const value = extractDateValue(story, STORY_SORT_FIELDS)
   return parseTimestamp(value)
 }
 
@@ -82,7 +83,7 @@ export function formatArticleDate(article) {
  * Format a story's date as localized datetime string
  */
 export function formatStoryDate(story) {
-  const value = extractDateValue(story, STORY_DATE_FIELDS)
+  const value = extractDateValue(story, STORY_DISPLAY_FIELDS)
   return formatDateTime(value)
 }
 

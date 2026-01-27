@@ -37,7 +37,8 @@
         "story_id": "sub_124",
         "title": "Families await missing teen updates"
       }
-    ]
+    ],
+    "story_period": "2024-01-01T00:00:00Z"
   },
   {
     "story_id": "6c45c0ae",
@@ -76,7 +77,8 @@
         "story_id": "sub_211",
         "title": "Local response and support efforts"
       }
-    ]
+    ],
+    "story_period": "2024-01-02T00:00:00Z"
   },
   {
     "story_id": "a2f9012c",
@@ -107,7 +109,8 @@
         "story_id": "sub_310",
         "title": "Seismic alerts tested during live event"
       }
-    ]
+    ],
+    "story_period": "2024-01-03T00:00:00Z"
   },
   {
     "story_id": "b5d01f89",
@@ -142,7 +145,8 @@
         "story_id": "sub_411",
         "title": "Policy trade-offs under debate"
       }
-    ]
+    ],
+    "story_period": "2024-01-04T00:00:00Z"
   },
   {
     "story_id": "c3e7d1aa",
@@ -177,6 +181,7 @@
         "story_id": "sub_511",
         "title": "Public health guidance during extreme heat"
       }
-    ]
+    ],
+    "story_period": "2024-01-05T00:00:00Z"
   }
 ]

@@ -59,3 +59,27 @@
 .rightTop {
   overflow: hidden;
 }
+
+.rightBottom {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bottomInner {
+  flex: 1;
+  align-self: center;
+  width: min(100%, 980px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.bottomRow {
+  flex: 1;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg-dark);
+  min-height: 0;
+  overflow: hidden;
+}

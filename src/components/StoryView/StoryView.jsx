@@ -11,10 +11,17 @@ function StoryView({ story, onBack, sourcesData }) {
   const summary = story.summary || ''
   const keyPoints = Array.isArray(story.key_points) ? story.key_points : []
   const updatedLabel = formatStoryDate(story)
+  const articleImages = (story.articles || [])
+    .map((a) => a.image_url)
+    .filter(Boolean)
+  const headerImage = articleImages[1] || articleImages[0] || null
 
   return (
     <div className={styles.container}>
-      <div className={styles.titleRow}>
+      <div
+        className={styles.titleRow}
+        style={headerImage ? { backgroundImage: `url(${headerImage})` } : undefined}
+      >
         <h2 className={styles.title}>{story.title}</h2>
       </div>
       <div className={styles.controls}>

@@ -32,7 +32,7 @@ const getGeometryBounds = (geometry) => {
   return [(minX + maxX) / 2, (minY + maxY) / 2]
 }
 
-function NewsMap({ stories = [], locationOverrides = {} }) {
+function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
   const [countryIndex, setCountryIndex] = useState(null)
 
   useEffect(() => {
@@ -66,20 +66,33 @@ function NewsMap({ stories = [], locationOverrides = {} }) {
     if (!countryIndex) return []
     const counts = new Map()
 
-    stories.forEach((story) => {
-      if (story.primary_location) {
-        const key = normalizeKey(story.primary_location)
-        counts.set(key, (counts.get(key) || 0) + 1)
-        return
-      }
-      const locations = Array.isArray(story.locations) ? story.locations : []
-      locations.forEach((location) => {
-        const rawName = typeof location === 'string' ? location : location?.name
-        if (!rawName) return
-        const key = normalizeKey(rawName)
-        counts.set(key, (counts.get(key) || 0) + 1)
+    const useTopLocations = Array.isArray(topLocations) && topLocations.length > 0
+
+    if (useTopLocations) {
+      topLocations.forEach((entry) => {
+        const iso3 = typeof entry?.iso3 === 'string' ? entry.iso3.trim() : ''
+        if (!iso3) return
+        const articleCount = Number(entry?.article_count) || 0
+        if (!Number.isFinite(articleCount) || articleCount <= 0) return
+        const key = normalizeKey(iso3)
+        counts.set(key, (counts.get(key) || 0) + articleCount)
       })
-    })
+    } else {
+      stories.forEach((story) => {
+        if (story.primary_location) {
+          const key = normalizeKey(story.primary_location)
+          counts.set(key, (counts.get(key) || 0) + 1)
+          return
+        }
+        const locations = Array.isArray(story.locations) ? story.locations : []
+        locations.forEach((location) => {
+          const rawName = typeof location === 'string' ? location : location?.name
+          if (!rawName) return
+          const key = normalizeKey(rawName)
+          counts.set(key, (counts.get(key) || 0) + 1)
+        })
+      })
+    }
 
     return Array.from(counts.entries())
       .map(([rawKey, count]) => {
@@ -96,7 +109,7 @@ function NewsMap({ stories = [], locationOverrides = {} }) {
         return { key: rawKey, coordinates, count, size }
       })
       .filter(Boolean)
-  }, [stories, countryIndex, locationOverrides])
+  }, [stories, topLocations, countryIndex, locationOverrides])
 
   return (
     <div className={styles.container}>

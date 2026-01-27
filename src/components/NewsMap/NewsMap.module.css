@@ -11,7 +11,9 @@
   flex: 1;
   align-self: center;
   width: min(100%, 980px);
-  border: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   background: radial-gradient(circle at top, var(--color-map-top) 0%, var(--color-map-mid) 55%, var(--color-map-bottom) 100%);
   overflow: hidden;
   min-height: 0;

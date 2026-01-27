@@ -1,7 +1,13 @@
+import { getSourceGroupKey } from '../../lib/sources'
 import styles from './StoryCard.module.css'
 
 function StoryCard({ story, onSelect }) {
-  const sourceCount = new Set(story.articles.map((article) => article.source)).size
+  const sourceCount = new Set(
+    story.articles
+      .map((article) => getSourceGroupKey(article?.source))
+      .filter(Boolean)
+  ).size
+  const imageUrl = story.articles.find((a) => a.image_url)?.image_url
   const handleSelect = () => {
     if (onSelect) {
       onSelect(story)
@@ -22,7 +28,11 @@ function StoryCard({ story, onSelect }) {
           }
         }}
       >
-        <div className={styles.media} />
+        {imageUrl ? (
+          <img src={imageUrl} alt="" className={styles.media} />
+        ) : (
+          <div className={styles.media} />
+        )}
         <div className={styles.content}>
           <div className={`${styles.row} ${styles.titleRow}`}>
             <div className={styles.titleBlock}>
