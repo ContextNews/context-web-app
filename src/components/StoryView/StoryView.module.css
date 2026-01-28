@@ -93,14 +93,24 @@
   text-transform: uppercase;
   cursor: pointer;
   border-bottom: 1px solid transparent;
+  position: relative;
 }
 
-.tab:hover {
-  border-bottom-color: var(--color-brand);
+.tab::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: 100%;
+  background: var(--color-brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms ease;
 }
 
-.tabActive {
-  border-bottom-color: var(--color-brand);
+.tabActive::after {
+  transform: scaleX(1);
 }
 
 .content {

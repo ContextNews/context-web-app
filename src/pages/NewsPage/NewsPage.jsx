@@ -3,6 +3,7 @@ import NewsMap from '../../components/NewsMap'
 import LineGraph from '../../components/LineGraph'
 import StoryList from '../../components/StoryList'
 import StoryView from '../../components/StoryView'
+import NewsFilters from '../../components/NewsFilters'
 import stories from '../../data/stories.json'
 import { buildApiUrl, hasApiBase } from '../../lib/api'
 import styles from './NewsPage.module.css'
@@ -13,6 +14,7 @@ function NewsPage() {
   const [selectedStory, setSelectedStory] = useState(null)
   const [sourcesData, setSourcesData] = useState([])
   const [topLocations, setTopLocations] = useState([])
+  const [topPeople, setTopPeople] = useState([])
 
   useEffect(() => {
     let isMounted = true
@@ -114,6 +116,39 @@ function NewsPage() {
     }
   }, [])
 
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadTopPeople() {
+      if (!hasApiBase) {
+        setTopPeople([])
+        return
+      }
+
+      try {
+        const response = await fetch(buildApiUrl('/top-people'))
+        if (!response.ok) {
+          throw new Error(`Request failed: ${response.status}`)
+        }
+        const data = await response.json()
+
+        if (isMounted) {
+          setTopPeople(Array.isArray(data) ? data : [])
+        }
+      } catch (error) {
+        if (isMounted) {
+          setTopPeople([])
+        }
+      }
+    }
+
+    loadTopPeople()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const topLocationSeries = useMemo(() => {
     if (!Array.isArray(topLocations) || topLocations.length === 0) {
       return null
@@ -186,6 +221,72 @@ function NewsPage() {
     return { labels, datasets }
   }, [topLocations])
 
+  const topPeopleSeries = useMemo(() => {
+    if (!Array.isArray(topPeople) || topPeople.length === 0) {
+      return null
+    }
+
+    const totals = new Map()
+    const perDate = new Map()
+    let maxDate = null
+
+    topPeople.forEach((entry) => {
+      const person = typeof entry?.person === 'string' ? entry.person.trim() : ''
+      const dateString = typeof entry?.date === 'string' ? entry.date : ''
+      const count = Number(entry?.article_count) || 0
+      if (!person || !dateString || !Number.isFinite(count)) return
+
+      const date = new Date(`${dateString}T00:00:00`)
+      if (!Number.isNaN(date.getTime())) {
+        if (!maxDate || date > maxDate) {
+          maxDate = date
+        }
+      }
+
+      totals.set(person, (totals.get(person) || 0) + count)
+
+      if (!perDate.has(person)) {
+        perDate.set(person, new Map())
+      }
+      const personDates = perDate.get(person)
+      personDates.set(dateString, (personDates.get(dateString) || 0) + count)
+    })
+
+    if (!maxDate) {
+      maxDate = new Date()
+    }
+
+    const last7 = []
+    for (let i = 6; i >= 0; i -= 1) {
+      const date = new Date(maxDate)
+      date.setDate(maxDate.getDate() - i)
+      last7.push(date)
+    }
+
+    const labels = last7.map((date) =>
+      date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
+    )
+    const labelDates = last7.map((date) => {
+      const year = date.getFullYear()
+      const month = String(date.getMonth() + 1).padStart(2, '0')
+      const day = String(date.getDate()).padStart(2, '0')
+      return `${year}-${month}-${day}`
+    })
+
+    const topPeopleKeys = Array.from(totals.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([person]) => person)
+
+    const datasets = topPeopleKeys.map((person) => {
+      const personDates = perDate.get(person) || new Map()
+      const data = labelDates.map((dateKey) => personDates.get(dateKey) || 0)
+      return { label: person, data }
+    })
+
+    return { labels, datasets }
+  }, [topPeople])
+
   return (
     <div className={styles.container}>
       <div className={styles.nav}>
@@ -200,11 +301,14 @@ function NewsPage() {
               sourcesData={sourcesData}
             />
           ) : (
-            <StoryList
-              storiesData={storiesData}
-              loadError={loadError}
-              onStorySelect={setSelectedStory}
-            />
+            <>
+              <NewsFilters />
+              <StoryList
+                storiesData={storiesData}
+                loadError={loadError}
+                onStorySelect={setSelectedStory}
+              />
+            </>
           )}
         </div>
         <div className={styles.rightPanel}>
@@ -220,7 +324,10 @@ function NewsPage() {
                 />
               </div>
               <div className={styles.bottomRow}>
-                <LineGraph allowFallback={false} />
+                <LineGraph
+                  datasets={topPeopleSeries?.datasets}
+                  labels={topPeopleSeries?.labels}
+                />
               </div>
             </div>
           </div>
