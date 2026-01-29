@@ -58,7 +58,7 @@ function NewsPage() {
 
     async function loadSources() {
       try {
-        const url = apiUrl('/sources_data')
+        const url = apiUrl('/sources_data/')
         console.info('[NewsPage] Fetching sources_data', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -92,7 +92,7 @@ function NewsPage() {
 
     async function loadTopLocations() {
       try {
-        const url = apiUrl('/top-locations')
+        const url = apiUrl('/top-locations/')
         console.log('FETCH URL', url)
         console.info('[NewsPage] Fetching top-locations', { url })
         const response = await fetch(url)
@@ -127,7 +127,7 @@ function NewsPage() {
 
     async function loadTopPeople() {
       try {
-        const url = apiUrl('/top-people')
+        const url = apiUrl('/top-people/')
         console.log('FETCH URL', url)
         console.info('[NewsPage] Fetching top-people', { url })
         const response = await fetch(url)
