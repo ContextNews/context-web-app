@@ -5,7 +5,7 @@ import StoryList from '../../components/StoryList'
 import StoryView from '../../components/StoryView'
 import NewsFilters from '../../components/NewsFilters'
 import stories from '../../data/stories.json'
-import { API_BASE } from '../../lib/api'
+import { apiUrl } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
 function NewsPage() {
@@ -20,10 +20,10 @@ function NewsPage() {
     let isMounted = true
 
     async function loadStories() {
-      console.info('[NewsPage] API base', { apiBase: API_BASE })
+      console.info('[NewsPage] API base', { apiBase: apiUrl('') })
 
       try {
-        const url = `${API_BASE}/stories/`
+        const url = apiUrl('/stories/')
         console.info('[NewsPage] Fetching stories', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -58,7 +58,7 @@ function NewsPage() {
 
     async function loadSources() {
       try {
-        const url = `${API_BASE}/sources_data`
+        const url = apiUrl('/sources_data')
         console.info('[NewsPage] Fetching sources_data', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -92,7 +92,8 @@ function NewsPage() {
 
     async function loadTopLocations() {
       try {
-        const url = `${API_BASE}/top-locations`
+        const url = apiUrl('/top-locations')
+        console.log('FETCH URL', url)
         console.info('[NewsPage] Fetching top-locations', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -126,7 +127,8 @@ function NewsPage() {
 
     async function loadTopPeople() {
       try {
-        const url = `${API_BASE}/top-people`
+        const url = apiUrl('/top-people')
+        console.log('FETCH URL', url)
         console.info('[NewsPage] Fetching top-people', { url })
         const response = await fetch(url)
         if (!response.ok) {
