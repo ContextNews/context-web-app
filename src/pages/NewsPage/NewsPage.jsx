@@ -20,23 +20,31 @@ function NewsPage() {
     let isMounted = true
 
     async function loadStories() {
+      console.info('[NewsPage] API base', { apiBase: buildApiUrl(''), hasApiBase })
       if (!hasApiBase) {
+        console.info('[NewsPage] No API base; using local stories.json')
         setStoriesData(stories)
         return
       }
 
       try {
-        const response = await fetch(buildApiUrl('/stories/'))
+        const url = buildApiUrl('/stories/')
+        console.info('[NewsPage] Fetching stories', { url })
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
         }
         const data = await response.json()
 
         if (isMounted) {
+          console.info('[NewsPage] Stories loaded', {
+            count: Array.isArray(data) ? data.length : 0,
+          })
           setStoriesData(Array.isArray(data) ? data : [])
         }
       } catch (error) {
         if (isMounted) {
+          console.error('[NewsPage] Stories request failed', error)
           setLoadError(error instanceof Error ? error.message : 'Request failed')
           setStoriesData(stories)
         }
@@ -55,22 +63,29 @@ function NewsPage() {
 
     async function loadSources() {
       if (!hasApiBase) {
+        console.info('[NewsPage] No API base; skipping sources_data')
         setSourcesData([])
         return
       }
 
       try {
-        const response = await fetch(buildApiUrl('/sources_data'))
+        const url = buildApiUrl('/sources_data')
+        console.info('[NewsPage] Fetching sources_data', { url })
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
         }
         const data = await response.json()
 
         if (isMounted) {
+          console.info('[NewsPage] Sources loaded', {
+            count: Array.isArray(data) ? data.length : 0,
+          })
           setSourcesData(Array.isArray(data) ? data : [])
         }
       } catch (error) {
         if (isMounted) {
+          console.error('[NewsPage] Sources request failed', error)
           setSourcesData([])
         }
       }
@@ -88,22 +103,29 @@ function NewsPage() {
 
     async function loadTopLocations() {
       if (!hasApiBase) {
+        console.info('[NewsPage] No API base; skipping top-locations')
         setTopLocations([])
         return
       }
 
       try {
-        const response = await fetch(buildApiUrl('/top-locations'))
+        const url = buildApiUrl('/top-locations')
+        console.info('[NewsPage] Fetching top-locations', { url })
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
         }
         const data = await response.json()
 
         if (isMounted) {
+          console.info('[NewsPage] Top locations loaded', {
+            count: Array.isArray(data) ? data.length : 0,
+          })
           setTopLocations(Array.isArray(data) ? data : [])
         }
       } catch (error) {
         if (isMounted) {
+          console.error('[NewsPage] Top locations request failed', error)
           setTopLocations([])
         }
       }
@@ -121,22 +143,29 @@ function NewsPage() {
 
     async function loadTopPeople() {
       if (!hasApiBase) {
+        console.info('[NewsPage] No API base; skipping top-people')
         setTopPeople([])
         return
       }
 
       try {
-        const response = await fetch(buildApiUrl('/top-people'))
+        const url = buildApiUrl('/top-people')
+        console.info('[NewsPage] Fetching top-people', { url })
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
         }
         const data = await response.json()
 
         if (isMounted) {
+          console.info('[NewsPage] Top people loaded', {
+            count: Array.isArray(data) ? data.length : 0,
+          })
           setTopPeople(Array.isArray(data) ? data : [])
         }
       } catch (error) {
         if (isMounted) {
+          console.error('[NewsPage] Top people request failed', error)
           setTopPeople([])
         }
       }
