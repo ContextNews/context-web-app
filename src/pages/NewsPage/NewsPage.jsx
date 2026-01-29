@@ -5,7 +5,7 @@ import StoryList from '../../components/StoryList'
 import StoryView from '../../components/StoryView'
 import NewsFilters from '../../components/NewsFilters'
 import stories from '../../data/stories.json'
-import { buildApiUrl, hasApiBase } from '../../lib/api'
+import { API_BASE } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
 function NewsPage() {
@@ -20,15 +20,10 @@ function NewsPage() {
     let isMounted = true
 
     async function loadStories() {
-      console.info('[NewsPage] API base', { apiBase: buildApiUrl(''), hasApiBase })
-      if (!hasApiBase) {
-        console.info('[NewsPage] No API base; using local stories.json')
-        setStoriesData(stories)
-        return
-      }
+      console.info('[NewsPage] API base', { apiBase: API_BASE })
 
       try {
-        const url = buildApiUrl('/stories/')
+        const url = `${API_BASE}/stories/`
         console.info('[NewsPage] Fetching stories', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -62,14 +57,8 @@ function NewsPage() {
     let isMounted = true
 
     async function loadSources() {
-      if (!hasApiBase) {
-        console.info('[NewsPage] No API base; skipping sources_data')
-        setSourcesData([])
-        return
-      }
-
       try {
-        const url = buildApiUrl('/sources_data')
+        const url = `${API_BASE}/sources_data`
         console.info('[NewsPage] Fetching sources_data', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -102,14 +91,8 @@ function NewsPage() {
     let isMounted = true
 
     async function loadTopLocations() {
-      if (!hasApiBase) {
-        console.info('[NewsPage] No API base; skipping top-locations')
-        setTopLocations([])
-        return
-      }
-
       try {
-        const url = buildApiUrl('/top-locations')
+        const url = `${API_BASE}/top-locations`
         console.info('[NewsPage] Fetching top-locations', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -142,14 +125,8 @@ function NewsPage() {
     let isMounted = true
 
     async function loadTopPeople() {
-      if (!hasApiBase) {
-        console.info('[NewsPage] No API base; skipping top-people')
-        setTopPeople([])
-        return
-      }
-
       try {
-        const url = buildApiUrl('/top-people')
+        const url = `${API_BASE}/top-people`
         console.info('[NewsPage] Fetching top-people', { url })
         const response = await fetch(url)
         if (!response.ok) {
