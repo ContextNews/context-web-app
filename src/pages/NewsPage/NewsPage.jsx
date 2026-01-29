@@ -58,7 +58,7 @@ function NewsPage() {
 
     async function loadSources() {
       try {
-        const url = apiUrl('/sources_data/')
+        const url = apiUrl('/sources_data')
         console.info('[NewsPage] Fetching sources_data', { url })
         const response = await fetch(url)
         if (!response.ok) {
