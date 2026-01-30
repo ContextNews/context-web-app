@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import NewsMap from '../../components/NewsMap'
-import LineGraph from '../../components/LineGraph'
+import AnalyticsOverview from '../../components/AnalyticsOverview'
 import StoryList from '../../components/StoryList'
 import StoryView from '../../components/StoryView'
 import NewsFilters from '../../components/NewsFilters'
@@ -311,27 +310,14 @@ function NewsPage() {
           )}
         </div>
         <div className={styles.rightPanel}>
-          <div className={styles.rightTop}>
-            <NewsMap stories={storiesData} topLocations={topLocations} />
-          </div>
-          <div className={styles.rightBottom}>
-            <div className={styles.bottomInner}>
-              <div className={styles.bottomRow}>
-                <LineGraph
-                  datasets={topLocationSeries?.datasets}
-                  labels={topLocationSeries?.labels}
-                  allowFallback={false}
-                />
-              </div>
-              <div className={styles.bottomRow}>
-                <LineGraph
-                  datasets={topPeopleSeries?.datasets}
-                  labels={topPeopleSeries?.labels}
-                  allowFallback={false}
-                />
-              </div>
-            </div>
-          </div>
+          {!selectedStory && (
+            <AnalyticsOverview
+              stories={storiesData}
+              topLocations={topLocations}
+              topLocationSeries={topLocationSeries}
+              topPeopleSeries={topPeopleSeries}
+            />
+          )}
         </div>
       </div>
     </div>
