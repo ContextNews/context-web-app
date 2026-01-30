@@ -69,12 +69,13 @@ function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
     const useTopLocations = Array.isArray(topLocations) && topLocations.length > 0
 
     if (useTopLocations) {
+      // New API returns: { type: "location", name: "Country", count: 12 }
       topLocations.forEach((entry) => {
-        const iso3 = typeof entry?.iso3 === 'string' ? entry.iso3.trim() : ''
-        if (!iso3) return
-        const articleCount = Number(entry?.article_count) || 0
+        const name = typeof entry?.name === 'string' ? entry.name.trim() : ''
+        if (!name) return
+        const articleCount = Number(entry?.count) || 0
         if (!Number.isFinite(articleCount) || articleCount <= 0) return
-        const key = normalizeKey(iso3)
+        const key = normalizeKey(name)
         counts.set(key, (counts.get(key) || 0) + articleCount)
       })
     } else {
