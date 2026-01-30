@@ -22,5 +22,6 @@ Thumbs.db
 
 .idea/
 .vscode/
+plans/
 
 *.log

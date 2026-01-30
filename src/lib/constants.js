@@ -2,19 +2,17 @@
  * Country name aliases for location matching
  */
 export const LOCATION_ALIASES = {
-  'u s': 'united states of america',
-  us: 'united states of america',
-  usa: 'united states of america',
-  'u k': 'united kingdom',
-  uk: 'united kingdom',
-  uae: 'united arab emirates',
-  'republic of korea': 'south korea',
-  'korea republic': 'south korea',
-  'north korea': 'north korea',
-  'south korea': 'south korea',
-  'russian federation': 'russia',
-  'czech republic': 'czechia',
+  'united states': 'united states of america',
 }
+
+/**
+ * Period filter options for news feed
+ */
+export const PERIOD_OPTIONS = [
+  { label: 'Today', value: 'today' },
+  { label: 'This week', value: 'week' },
+  { label: 'This month', value: 'month' },
+]
 
 /**
  * Ordered list of bias categories from left to right

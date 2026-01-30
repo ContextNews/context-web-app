@@ -1,3 +1,4 @@
+import { PERIOD_OPTIONS } from '../../lib/constants'
 import styles from './NewsFilters.module.css'
 
 const REGIONS = [
@@ -20,16 +21,10 @@ const TOPICS = [
   'Culture',
 ]
 
-const TIMEFRAMES = ['Today', 'This week', 'This month']
-
 function FilterMenu({ label, items }) {
   return (
     <div className={styles.menuItem}>
-      <button
-        type="button"
-        className={styles.trigger}
-        aria-haspopup="true"
-      >
+      <button type="button" className={styles.trigger} aria-haspopup="true">
         {label}
       </button>
       <div className={styles.submenu} role="menu">
@@ -43,13 +38,38 @@ function FilterMenu({ label, items }) {
   )
 }
 
-function NewsFilters() {
+function PeriodMenu({ selectedValue, onSelect }) {
+  const currentLabel = PERIOD_OPTIONS.find((p) => p.value === selectedValue)?.label || 'Today'
+
+  return (
+    <div className={styles.menuItem}>
+      <button type="button" className={styles.trigger} aria-haspopup="true">
+        {currentLabel}
+      </button>
+      <div className={styles.submenu} role="menu">
+        {PERIOD_OPTIONS.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            className={`${styles.submenuItem} ${option.value === selectedValue ? styles.selected : ''}`}
+            role="menuitem"
+            onClick={() => onSelect(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function NewsFilters({ period, onPeriodChange }) {
   return (
     <div className={styles.container}>
       <div className={styles.group}>
         <FilterMenu label="Global" items={REGIONS} />
         <FilterMenu label="News" items={TOPICS} />
-        <FilterMenu label="Today" items={TIMEFRAMES} />
+        <PeriodMenu selectedValue={period} onSelect={onPeriodChange} />
       </div>
     </div>
   )

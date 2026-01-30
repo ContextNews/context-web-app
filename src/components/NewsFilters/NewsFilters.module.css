@@ -77,3 +77,7 @@
   background: var(--color-hover-dark);
   color: var(--color-text-light);
 }
+
+.submenuItem.selected {
+  color: var(--color-brand);
+}

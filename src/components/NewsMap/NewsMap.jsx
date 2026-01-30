@@ -4,6 +4,21 @@ import { LOCATION_ALIASES } from '../../lib/constants'
 import { normalizeKey } from '../../lib/normalize'
 import styles from './NewsMap.module.css'
 
+// Manual coordinate overrides for countries where getGeometryBounds
+// calculates wrong centroids (antimeridian crossers, overseas territories)
+const COORDINATE_OVERRIDES = {
+  'united states of america': [-98, 39],
+  russia: [100, 60],
+  france: [2, 46],
+  'united kingdom': [-2, 54],
+  netherlands: [5, 52],
+  denmark: [10, 56],
+  portugal: [-8, 39],
+  spain: [-4, 40],
+  'new zealand': [174, -41],
+  fiji: [178, -18],
+}
+
 const getGeometryBounds = (geometry) => {
   let minX = Infinity
   let maxX = -Infinity
@@ -45,11 +60,20 @@ function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
         data.features.forEach((feature) => {
           const { name, 'ISO3166-1-Alpha-2': alpha2, 'ISO3166-1-Alpha-3': alpha3 } =
             feature.properties || {}
-          const centroid = getGeometryBounds(feature.geometry)
+          const normalizedName = name ? normalizeKey(name) : null
+          const centroid =
+            COORDINATE_OVERRIDES[normalizedName] || getGeometryBounds(feature.geometry)
           if (!centroid) return
-          if (name) index.set(normalizeKey(name), centroid)
+          if (normalizedName) index.set(normalizedName, centroid)
           if (alpha2) index.set(normalizeKey(alpha2), centroid)
           if (alpha3) index.set(normalizeKey(alpha3), centroid)
+        })
+        // Debug: log coordinates for US and Russia
+        console.info('[NewsMap] countryIndex built', {
+          size: index.size,
+          russia: index.get('russia'),
+          us: index.get('united states of america'),
+          usAlt: index.get('us'),
         })
         setCountryIndex(index)
       })
@@ -105,12 +129,25 @@ function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
           locationOverrides[normalizedAlias]
         const coordinates = override || countryIndex.get(normalizedAlias)
 
-        if (!coordinates) return null
+        if (!coordinates) {
+          return null
+        }
         const size = Math.min(14, 3 + count * 1.2)
         return { key: rawKey, coordinates, count, size }
       })
       .filter(Boolean)
   }, [stories, topLocations, countryIndex, locationOverrides])
+
+  // Debug: log all markers being rendered
+  console.info('[NewsMap] Markers to render', {
+    count: markers.length,
+    markers: markers.map((m) => ({
+      key: m.key,
+      coordinates: m.coordinates,
+      count: m.count,
+      size: m.size,
+    })),
+  })
 
   return (
     <div className={styles.container}>

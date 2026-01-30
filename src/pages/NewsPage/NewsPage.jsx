@@ -15,6 +15,7 @@ function NewsPage() {
   const [sourcesData, setSourcesData] = useState([])
   const [topLocations, setTopLocations] = useState([])
   const [topPeople, setTopPeople] = useState([])
+  const [period, setPeriod] = useState('today')
 
   useEffect(() => {
     let isMounted = true
@@ -23,8 +24,8 @@ function NewsPage() {
       console.info('[NewsPage] API base', { apiBase: apiUrl('') })
 
       try {
-        const url = apiUrl('/news/stories')
-        console.info('[NewsPage] Fetching stories', { url })
+        const url = apiUrl(`/news/stories?period=${period}`)
+        console.info('[NewsPage] Fetching stories', { url, period })
         const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
@@ -51,7 +52,7 @@ function NewsPage() {
     return () => {
       isMounted = false
     }
-  }, [])
+  }, [period])
 
   useEffect(() => {
     let isMounted = true
@@ -92,7 +93,7 @@ function NewsPage() {
 
     async function loadTopLocations() {
       try {
-        const url = apiUrl('/news/analytics/top-locations')
+        const url = apiUrl('/news/analytics/top-locations?interval=hourly')
         console.info('[NewsPage] Fetching top-locations', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -103,7 +104,15 @@ function NewsPage() {
         if (isMounted) {
           console.info('[NewsPage] Top locations loaded', {
             count: Array.isArray(data) ? data.length : 0,
+            data,
           })
+          if (Array.isArray(data) && data.length > 0) {
+            console.info('[NewsPage] Top locations history sample', {
+              firstEntity: data[0]?.name,
+              historyLength: data[0]?.history?.length,
+              history: data[0]?.history,
+            })
+          }
           setTopLocations(Array.isArray(data) ? data : [])
         }
       } catch (error) {
@@ -126,7 +135,7 @@ function NewsPage() {
 
     async function loadTopPeople() {
       try {
-        const url = apiUrl('/news/analytics/top-people')
+        const url = apiUrl('/news/analytics/top-people?interval=hourly')
         console.info('[NewsPage] Fetching top-people', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -137,7 +146,15 @@ function NewsPage() {
         if (isMounted) {
           console.info('[NewsPage] Top people loaded', {
             count: Array.isArray(data) ? data.length : 0,
+            data,
           })
+          if (Array.isArray(data) && data.length > 0) {
+            console.info('[NewsPage] Top people history sample', {
+              firstEntity: data[0]?.name,
+              historyLength: data[0]?.history?.length,
+              history: data[0]?.history,
+            })
+          }
           setTopPeople(Array.isArray(data) ? data : [])
         }
       } catch (error) {
@@ -160,22 +177,54 @@ function NewsPage() {
       return null
     }
 
-    // New API returns: { type: "location", name: "Country", count: 12 }
-    const sorted = [...topLocations]
-      .filter((entry) => entry?.name && typeof entry?.count === 'number')
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5)
+    // Filter to entries that have historical data
+    const withHistory = topLocations.filter(
+      (entry) =>
+        entry?.name &&
+        typeof entry?.count === 'number' &&
+        Array.isArray(entry?.history) &&
+        entry.history.length > 0
+    )
 
-    if (sorted.length === 0) {
+    if (withHistory.length === 0) {
       return null
     }
 
-    // Create a single-point dataset for each location
-    const labels = ['Mentions']
-    const datasets = sorted.map((entry) => ({
-      label: entry.name,
-      data: [entry.count],
-    }))
+    // Sort by total count and take top 5
+    const sorted = [...withHistory].sort((a, b) => b.count - a.count).slice(0, 5)
+
+    // Collect all unique timestamps and sort them
+    const allTimestamps = new Set()
+    sorted.forEach((entry) => {
+      entry.history.forEach((point) => {
+        allTimestamps.add(point.timestamp)
+      })
+    })
+    const sortedTimestamps = [...allTimestamps].sort()
+
+    console.info('[NewsPage] topLocationSeries processing', {
+      sortedTimestamps,
+      entityNames: sorted.map((e) => e.name),
+    })
+
+    // Create labels from timestamps (format as hour)
+    const labels = sortedTimestamps.map((ts) => {
+      const date = new Date(ts)
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+    })
+
+    console.info('[NewsPage] topLocationSeries labels', { labels })
+
+    // Create datasets, filling in 0 for missing timestamps
+    const datasets = sorted.map((entry) => {
+      const countByTimestamp = new Map(
+        entry.history.map((point) => [point.timestamp, point.count])
+      )
+      return {
+        label: entry.name,
+        data: sortedTimestamps.map((ts) => countByTimestamp.get(ts) || 0),
+      }
+    })
 
     return { labels, datasets }
   }, [topLocations])
@@ -185,22 +234,54 @@ function NewsPage() {
       return null
     }
 
-    // New API returns: { type: "person", name: "Person Name", count: 12 }
-    const sorted = [...topPeople]
-      .filter((entry) => entry?.name && typeof entry?.count === 'number')
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5)
+    // Filter to entries that have historical data
+    const withHistory = topPeople.filter(
+      (entry) =>
+        entry?.name &&
+        typeof entry?.count === 'number' &&
+        Array.isArray(entry?.history) &&
+        entry.history.length > 0
+    )
 
-    if (sorted.length === 0) {
+    if (withHistory.length === 0) {
       return null
     }
 
-    // Create a single-point dataset for each person
-    const labels = ['Mentions']
-    const datasets = sorted.map((entry) => ({
-      label: entry.name,
-      data: [entry.count],
-    }))
+    // Sort by total count and take top 5
+    const sorted = [...withHistory].sort((a, b) => b.count - a.count).slice(0, 5)
+
+    // Collect all unique timestamps and sort them
+    const allTimestamps = new Set()
+    sorted.forEach((entry) => {
+      entry.history.forEach((point) => {
+        allTimestamps.add(point.timestamp)
+      })
+    })
+    const sortedTimestamps = [...allTimestamps].sort()
+
+    console.info('[NewsPage] topPeopleSeries processing', {
+      sortedTimestamps,
+      entityNames: sorted.map((e) => e.name),
+    })
+
+    // Create labels from timestamps (format as hour)
+    const labels = sortedTimestamps.map((ts) => {
+      const date = new Date(ts)
+      return date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+    })
+
+    console.info('[NewsPage] topPeopleSeries labels', { labels })
+
+    // Create datasets, filling in 0 for missing timestamps
+    const datasets = sorted.map((entry) => {
+      const countByTimestamp = new Map(
+        entry.history.map((point) => [point.timestamp, point.count])
+      )
+      return {
+        label: entry.name,
+        data: sortedTimestamps.map((ts) => countByTimestamp.get(ts) || 0),
+      }
+    })
 
     return { labels, datasets }
   }, [topPeople])
@@ -220,7 +301,7 @@ function NewsPage() {
             />
           ) : (
             <>
-              <NewsFilters />
+              <NewsFilters period={period} onPeriodChange={setPeriod} />
               <StoryList
                 storiesData={storiesData}
                 loadError={loadError}
@@ -239,12 +320,14 @@ function NewsPage() {
                 <LineGraph
                   datasets={topLocationSeries?.datasets}
                   labels={topLocationSeries?.labels}
+                  allowFallback={false}
                 />
               </div>
               <div className={styles.bottomRow}>
                 <LineGraph
                   datasets={topPeopleSeries?.datasets}
                   labels={topPeopleSeries?.labels}
+                  allowFallback={false}
                 />
               </div>
             </div>
