@@ -23,7 +23,7 @@ function NewsPage() {
       console.info('[NewsPage] API base', { apiBase: apiUrl('') })
 
       try {
-        const url = apiUrl('/news/stories/')
+        const url = apiUrl('/news/stories')
         console.info('[NewsPage] Fetching stories', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -58,7 +58,7 @@ function NewsPage() {
 
     async function loadSources() {
       try {
-        const url = apiUrl('/news/sources/')
+        const url = apiUrl('/news/sources')
         console.info('[NewsPage] Fetching sources_data', { url })
         const response = await fetch(url)
         if (!response.ok) {
