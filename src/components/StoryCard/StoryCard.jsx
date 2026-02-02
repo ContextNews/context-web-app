@@ -37,8 +37,8 @@ function StoryCard({ story, onSelect }) {
           <div className={`${styles.row} ${styles.titleRow}`}>
             <div className={styles.titleBlock}>
               <h2 className={styles.title}>{story.title}</h2>
-              {story.primary_location ? (
-                <span className={styles.location}>{story.primary_location}</span>
+              {story.locations?.[0]?.name ? (
+                <span className={styles.location}>{story.locations[0].name}</span>
               ) : null}
             </div>
           </div>

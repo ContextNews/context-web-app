@@ -104,18 +104,11 @@ function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
       })
     } else {
       stories.forEach((story) => {
-        if (story.primary_location) {
-          const key = normalizeKey(story.primary_location)
-          counts.set(key, (counts.get(key) || 0) + 1)
-          return
-        }
-        const locations = Array.isArray(story.locations) ? story.locations : []
-        locations.forEach((location) => {
-          const rawName = typeof location === 'string' ? location : location?.name
-          if (!rawName) return
-          const key = normalizeKey(rawName)
-          counts.set(key, (counts.get(key) || 0) + 1)
-        })
+        const firstLocation = story.locations?.[0]
+        const rawName = typeof firstLocation === 'string' ? firstLocation : firstLocation?.name
+        if (!rawName) return
+        const key = normalizeKey(rawName)
+        counts.set(key, (counts.get(key) || 0) + 1)
       })
     }
 

@@ -59,11 +59,11 @@ function StoryView({ story, onBack, sourcesData }) {
               <p className={styles.summary}>Summary pending.</p>
             )}
             <div className={styles.info}>
-              {story.primary_location ? (
+              {story.locations?.[0]?.name ? (
                 <div className={styles.infoItem}>
                   <span className={styles.infoLabel}>Location</span>
                   <span className={styles.infoValue}>
-                    {story.primary_location}
+                    {story.locations[0].name}
                   </span>
                 </div>
               ) : null}
