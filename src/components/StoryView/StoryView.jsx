@@ -62,6 +62,14 @@ function StoryView({ story, onBack, sourcesData }) {
                   </span>
                 </div>
               ) : null}
+              {story.topics?.length ? (
+                <div className={styles.infoItem}>
+                  <span className={styles.infoLabel}>Topics</span>
+                  <span className={styles.infoValue}>
+                    {story.topics.map(t => t.toUpperCase()).join(', ')}
+                  </span>
+                </div>
+              ) : null}
             </div>
             {summary ? (
               <p className={styles.summary}>{summary}</p>

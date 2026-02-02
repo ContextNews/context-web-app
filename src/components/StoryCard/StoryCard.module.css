@@ -67,11 +67,25 @@
   color: var(--color-text-light);
 }
 
+.metadata {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .location {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(245, 245, 245, 0.7);
+}
+
+.topics {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.5);
 }
 
 .metaRow {
