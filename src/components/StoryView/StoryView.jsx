@@ -53,11 +53,6 @@ function StoryView({ story, onBack, sourcesData }) {
       <div className={styles.content}>
         {activeTab === 'overview' ? (
           <div className={styles.overview}>
-            {summary ? (
-              <p className={styles.summary}>{summary}</p>
-            ) : (
-              <p className={styles.summary}>Summary pending.</p>
-            )}
             <div className={styles.info}>
               {story.locations?.[0]?.name ? (
                 <div className={styles.infoItem}>
@@ -68,6 +63,11 @@ function StoryView({ story, onBack, sourcesData }) {
                 </div>
               ) : null}
             </div>
+            {summary ? (
+              <p className={styles.summary}>{summary}</p>
+            ) : (
+              <p className={styles.summary}>Summary pending.</p>
+            )}
             {keyPoints.length ? (
               <div>
                 <div className={styles.pointsTitle}>Key points</div>
