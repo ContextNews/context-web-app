@@ -1,76 +1,115 @@
-import { PERIOD_OPTIONS } from '../../lib/constants'
+import { useState } from 'react'
+import { PERIOD_OPTIONS, REGION_OPTIONS, TOPIC_OPTIONS } from '../../lib/constants'
 import styles from './NewsFilters.module.css'
 
-const REGIONS = [
-  'North America',
-  'South America',
-  'Europe',
-  'Africa',
-  'Asia',
-  'Oceania',
-  'Middle East',
-]
-
-const TOPICS = [
-  'News',
-  'Politics',
-  'Economics',
-  'Business',
-  'Conflict',
-  'Science',
-  'Culture',
-]
-
-function FilterMenu({ label, items }) {
+function HamburgerIcon() {
   return (
-    <div className={styles.menuItem}>
-      <button type="button" className={styles.trigger} aria-haspopup="true">
-        {label}
-      </button>
-      <div className={styles.submenu} role="menu">
-        {items.map((item) => (
-          <button key={item} type="button" className={styles.submenuItem} role="menuitem">
-            {item}
-          </button>
-        ))}
-      </div>
-    </div>
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 5H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 10H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 15H17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
   )
 }
 
-function PeriodMenu({ selectedValue, onSelect }) {
-  const currentLabel = PERIOD_OPTIONS.find((p) => p.value === selectedValue)?.label || 'Today'
-
-  return (
-    <div className={styles.menuItem}>
-      <button type="button" className={styles.trigger} aria-haspopup="true">
-        {currentLabel}
-      </button>
-      <div className={styles.submenu} role="menu">
-        {PERIOD_OPTIONS.map((option) => (
-          <button
-            key={option.value}
-            type="button"
-            className={`${styles.submenuItem} ${option.value === selectedValue ? styles.selected : ''}`}
-            role="menuitem"
-            onClick={() => onSelect(option.value)}
-          >
-            {option.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  )
+// Convert region labels to adjective form for the title
+const REGION_ADJECTIVES = {
+  '': 'Global',
+  'north_america': 'North American',
+  'south_america': 'South American',
+  'europe': 'European',
+  'africa': 'African',
+  'middle_east': 'Middle Eastern',
+  'asia': 'Asian',
+  'oceania': 'Oceanian',
 }
 
-function NewsFilters({ period, onPeriodChange }) {
+function NewsFilters({ region, onRegionChange, period, onPeriodChange, topic, onTopicChange }) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  // Build title: "[Region] [Topic] [Period]"
+  const regionAdjective = REGION_ADJECTIVES[region] || 'Global'
+  const topicLabel = TOPIC_OPTIONS.find((t) => t.value === (topic || ''))?.label || 'All'
+  const periodLabel = PERIOD_OPTIONS.find((p) => p.value === period)?.label || 'Today'
+
+  // Use "News" when topic is "All"
+  const topicDisplay = topicLabel === 'All' ? 'News' : topicLabel
+
+  const title = `${regionAdjective} ${topicDisplay} ${periodLabel}`
+
   return (
     <div className={styles.container}>
-      <div className={styles.group}>
-        <FilterMenu label="Global" items={REGIONS} />
-        <FilterMenu label="News" items={TOPICS} />
-        <PeriodMenu selectedValue={period} onSelect={onPeriodChange} />
-      </div>
+      <button
+        type="button"
+        className={styles.hamburger}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-label="Toggle filters"
+      >
+        <HamburgerIcon />
+      </button>
+      <div className={styles.title}>{title}</div>
+
+      {isOpen && (
+        <>
+          <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
+          <div className={styles.filterPanel}>
+            <div className={styles.column}>
+              <div className={styles.columnHeader}>Location</div>
+              <div className={styles.columnOptions}>
+                {REGION_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`${styles.option} ${option.value === region ? styles.selected : ''}`}
+                    onClick={() => {
+                      onRegionChange(option.value)
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.column}>
+              <div className={styles.columnHeader}>Topic</div>
+              <div className={styles.columnOptions}>
+                {TOPIC_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`${styles.option} ${option.value === (topic || '') ? styles.selected : ''}`}
+                    onClick={() => {
+                      onTopicChange?.(option.value)
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.column}>
+              <div className={styles.columnHeader}>Period</div>
+              <div className={styles.columnOptions}>
+                {PERIOD_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`${styles.option} ${option.value === period ? styles.selected : ''}`}
+                    onClick={() => {
+                      onPeriodChange(option.value)
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

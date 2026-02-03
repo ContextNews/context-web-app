@@ -15,6 +15,8 @@ function NewsPage() {
   const [topLocations, setTopLocations] = useState([])
   const [topPeople, setTopPeople] = useState([])
   const [period, setPeriod] = useState('today')
+  const [region, setRegion] = useState('')
+  const [topic, setTopic] = useState('')
 
   useEffect(() => {
     let isMounted = true
@@ -23,8 +25,15 @@ function NewsPage() {
       console.info('[NewsPage] API base', { apiBase: apiUrl('') })
 
       try {
-        const url = apiUrl(`/news/stories?period=${period}`)
-        console.info('[NewsPage] Fetching stories', { url, period })
+        const params = new URLSearchParams({ period })
+        if (region) {
+          params.set('region', region)
+        }
+        if (topic) {
+          params.set('topic', topic)
+        }
+        const url = apiUrl(`/news/stories?${params}`)
+        console.info('[NewsPage] Fetching stories', { url, period, region, topic })
         const response = await fetch(url)
         if (!response.ok) {
           throw new Error(`Request failed: ${response.status}`)
@@ -51,7 +60,7 @@ function NewsPage() {
     return () => {
       isMounted = false
     }
-  }, [period])
+  }, [period, region, topic])
 
   useEffect(() => {
     let isMounted = true
@@ -292,6 +301,7 @@ function NewsPage() {
       </div>
       <div className={styles.content}>
         <div className={styles.leftPanel}>
+          
           {selectedStory ? (
             <StoryView
               story={selectedStory}
@@ -300,7 +310,7 @@ function NewsPage() {
             />
           ) : (
             <>
-              <NewsFilters period={period} onPeriodChange={setPeriod} />
+              <NewsFilters region={region} onRegionChange={setRegion} period={period} onPeriodChange={setPeriod} topic={topic} onTopicChange={setTopic} />
               <StoryList
                 storiesData={storiesData}
                 loadError={loadError}
