@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import AnalyticsOverview from '../../components/AnalyticsOverview'
 import StoryList from '../../components/StoryList'
 import StoryView from '../../components/StoryView'
+import StoryViewEntities from '../../components/StoryViewEntities'
+import StoryMap from '../../components/StoryMap'
 import NewsFilters from '../../components/NewsFilters'
 import stories from '../../data/stories.json'
 import { apiUrl } from '../../lib/api'
@@ -17,6 +19,15 @@ function NewsPage() {
   const [period, setPeriod] = useState('today')
   const [region, setRegion] = useState('')
   const [topic, setTopic] = useState('')
+
+  const handleStorySelect = (story) => {
+    console.info('[NewsPage] Story selected', {
+      storyId: story?.story_id ?? story?.id ?? null,
+      title: story?.title ?? null,
+      story,
+    })
+    setSelectedStory(story)
+  }
 
   useEffect(() => {
     let isMounted = true
@@ -314,13 +325,25 @@ function NewsPage() {
               <StoryList
                 storiesData={storiesData}
                 loadError={loadError}
-                onStorySelect={setSelectedStory}
+                onStorySelect={handleStorySelect}
               />
             </>
           )}
         </div>
         <div className={styles.rightPanel}>
-          {!selectedStory && (
+          {selectedStory ? (
+            <div className={styles.storyRightLayout}>
+              <div className={styles.storyRightTopRow}>
+                <div className={styles.storyRightBox}>
+                  <StoryViewEntities story={selectedStory} />
+                </div>
+                <div className={styles.storyRightBox}>
+                  <StoryMap story={selectedStory} />
+                </div>
+              </div>
+              <div className={styles.storyRightBox} />
+            </div>
+          ) : (
             <AnalyticsOverview
               stories={storiesData}
               topLocations={topLocations}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Map</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <style>
+      html,
+      body,
+      #map {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #111315;
+      }
+
+      .leaflet-control-attribution {
+        background: rgba(9, 10, 11, 0.72);
+        color: #b5bcc4;
+      }
+
+      .leaflet-control-attribution a {
+        color: #d0d7de;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script>
+      const params = new URLSearchParams(window.location.search)
+      const lat = Number(params.get('lat'))
+      const lon = Number(params.get('lon'))
+      const zoomParam = Number(params.get('zoom'))
+      const zoom = Number.isFinite(zoomParam) ? zoomParam : 5
+
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        document.body.innerHTML = ''
+        document.body.style.background = '#111315'
+      } else {
+        const map = L.map('map', {
+          center: [lat, lon],
+          zoom,
+          zoomControl: false,
+          attributionControl: true,
+          preferCanvas: true,
+        })
+        map.attributionControl.setPrefix(false)
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          attribution:
+            '&copy; OpenStreetMap contributors &copy; CARTO',
+        }).addTo(map)
+
+        L.circleMarker([lat, lon], {
+          radius: 6,
+          color: '#9ed0ff',
+          weight: 1.5,
+          fillColor: '#9ed0ff',
+          fillOpacity: 0.35,
+        }).addTo(map)
+      }
+    </script>
+  </body>
+</html>

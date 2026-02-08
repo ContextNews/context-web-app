@@ -48,3 +48,36 @@
   gap: 0;
   min-height: 0;
 }
+
+.storyRightLayout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.storyRightTopRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.storyRightTopRow .storyRightBox {
+  flex: 1;
+  border: none;
+}
+
+.storyRightBox {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  box-sizing: border-box;
+}
+
+.storyRightTopRow .storyRightBox:last-child {
+  border-left: 1px solid var(--color-border);
+}
+
+.storyRightLayout > .storyRightBox {
+  border-top: 1px solid var(--color-border);
+}
