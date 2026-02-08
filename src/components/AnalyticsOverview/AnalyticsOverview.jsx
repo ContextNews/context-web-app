@@ -2,11 +2,11 @@ import NewsMap from '../NewsMap'
 import LineGraph from '../LineGraph'
 import styles from './AnalyticsOverview.module.css'
 
-function AnalyticsOverview({ stories, topLocations, topLocationSeries, topPeopleSeries }) {
+function AnalyticsOverview({ stories, topLocations, topLocationSeries, topPeopleSeries, region }) {
   return (
     <>
       <div className={styles.mapSection}>
-        <NewsMap stories={stories} topLocations={topLocations} />
+        <NewsMap stories={stories} topLocations={topLocations} region={region} />
       </div>
       <div className={styles.graphsSection}>
         <div className={styles.graphsInner}>

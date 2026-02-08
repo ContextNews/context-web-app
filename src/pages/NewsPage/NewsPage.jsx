@@ -349,6 +349,7 @@ function NewsPage() {
               topLocations={topLocations}
               topLocationSeries={topLocationSeries}
               topPeopleSeries={topPeopleSeries}
+              region={region}
             />
           )}
         </div>

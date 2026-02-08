@@ -6,6 +6,17 @@ import styles from './NewsMap.module.css'
 
 // Manual coordinate overrides for countries where getGeometryBounds
 // calculates wrong centroids (antimeridian crossers, overseas territories)
+const REGION_MAP_CONFIG = {
+  '': { center: [0, 23], scale: 165 },
+  north_america: { center: [-100, 45], scale: 400 },
+  south_america: { center: [-60, -20], scale: 450 },
+  europe: { center: [15, 52], scale: 600 },
+  africa: { center: [20, 5], scale: 400 },
+  middle_east: { center: [45, 28], scale: 600 },
+  asia: { center: [95, 35], scale: 300 },
+  oceania: { center: [140, -25], scale: 500 },
+}
+
 const COORDINATE_OVERRIDES = {
   'united states of america': [-98, 39],
   russia: [100, 60],
@@ -47,7 +58,7 @@ const getGeometryBounds = (geometry) => {
   return [(minX + maxX) / 2, (minY + maxY) / 2]
 }
 
-function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
+function NewsMap({ stories = [], topLocations = [], locationOverrides = {}, region = '' }) {
   const [countryIndex, setCountryIndex] = useState(null)
 
   useEffect(() => {
@@ -148,7 +159,7 @@ function NewsMap({ stories = [], topLocations = [], locationOverrides = {} }) {
         <ComposableMap
           className={styles.svg}
           projection="geoMercator"
-          projectionConfig={{ scale: 165, center: [0, 23] }}
+          projectionConfig={REGION_MAP_CONFIG[region] || REGION_MAP_CONFIG['']}
           width={720}
           height={450}
         >
