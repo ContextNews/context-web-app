@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { sortArticlesByDate, formatArticleDate, formatStoryDate } from '../../lib/dates'
 import CoverageBiasBar from '../CoverageBiasBar'
+import StoryTimeline from '../StoryTimeline'
 import styles from './StoryView.module.css'
 
 function StoryView({ story, onBack, sourcesData }) {
@@ -86,6 +87,7 @@ function StoryView({ story, onBack, sourcesData }) {
                 </ul>
               </div>
             ) : null}
+            <StoryTimeline story={story} />
             {updatedLabel ? (
               <div className={styles.updated}>Updated {updatedLabel}</div>
             ) : null}

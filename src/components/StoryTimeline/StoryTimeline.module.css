@@ -1,0 +1,75 @@
+.timeline {
+  margin-top: 20px;
+}
+
+.title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  gap: 12px;
+  min-height: 0;
+}
+
+.rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12px;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.itemCurrent .dot {
+  background: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(226, 26, 65, 0.25);
+}
+
+.line {
+  width: 1px;
+  flex: 1;
+  background: var(--color-border);
+  min-height: 12px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 16px;
+}
+
+.itemTitle {
+  font-size: 13px;
+  color: var(--color-text-body);
+  line-height: 1.4;
+}
+
+.itemCurrent .itemTitle {
+  color: var(--color-text-light);
+}
+
+.date {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
