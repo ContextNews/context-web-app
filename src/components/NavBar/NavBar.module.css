@@ -1,0 +1,40 @@
+.nav {
+  width: 100%;
+  height: 1in;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.navTitle {
+  color: var(--color-text-light);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: default;
+  text-decoration: none;
+}
+
+.navActions {
+  margin-left: auto;
+}
+
+.loginButton {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-border);
+  padding: 8px 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.loginButton:hover {
+  color: var(--color-brand);
+  border-color: var(--color-brand);
+}

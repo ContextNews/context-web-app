@@ -5,7 +5,7 @@ import StoryView from '../../components/StoryView'
 import StoryViewEntities from '../../components/StoryViewEntities'
 import StoryMap from '../../components/StoryMap'
 import NewsFilters from '../../components/NewsFilters'
-import AuthModal from '../../components/AuthModal'
+import NavBar from '../../components/NavBar'
 import stories from '../../data/stories.json'
 import { apiUrl } from '../../lib/api'
 import styles from './NewsPage.module.css'
@@ -20,7 +20,6 @@ function NewsPage() {
   const [period, setPeriod] = useState('today')
   const [region, setRegion] = useState('')
   const [topic, setTopic] = useState('')
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   const handleStorySelect = async (story) => {
     const storyId = story?.story_id ?? story?.id ?? null
@@ -322,18 +321,7 @@ function NewsPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.nav}>
-        <div className={styles.navTitle}>Context</div>
-        <div className={styles.navActions}>
-          <button
-            type="button"
-            className={styles.loginButton}
-            onClick={() => setIsAuthModalOpen(true)}
-          >
-            Login
-          </button>
-        </div>
-      </div>
+      <NavBar />
       <div className={styles.content}>
         <div className={styles.leftPanel}>
           
@@ -378,7 +366,6 @@ function NewsPage() {
           )}
         </div>
       </div>
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </div>
   )
 }

@@ -5,87 +5,77 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Commands
 
 ```bash
-npm run dev      # Start dev server (http://localhost:5173)
+npm run dev      # Start dev server (http://localhost:5173), proxies /api/* to localhost:8000
+npm run dev:aws  # Start dev server with AWS API config (uses .env.aws)
 npm run build    # Production build to dist/
 npm run preview  # Preview production build
 ```
 
+## Deployment
+
+Pushes to `main` trigger GitHub Actions: builds with `--mode aws`, syncs to S3 (`context-dev-frontend`), invalidates CloudFront.
+
 ## Architecture
 
-This is a React 18 + Vite news aggregation web app that displays global stories with geographic visualization.
+React 18 + Vite news aggregation web app with geographic visualization.
 
 ### Routing
 
-Simple path-based routing in `App.jsx` (no router library):
+Simple path-based routing in `App.jsx` (no router library). All pages wrapped in `MobileBlocker`:
 - `/` → LandingPage (animated 3D globe with regional news preview)
-- `/news` → NewsPage (full news interface with map and story list)
+- `/news` → NewsPage (full news interface with story list, map, and analytics)
 
 ### Data Flow
 
-**NewsPage** fetches from two endpoints when `VITE_API_BASE_URL` is set:
-- `/stories/` - news stories with articles
-- `/sources_data` - source metadata including bias ratings
+**NewsPage** fetches from API endpoints (base URL from `VITE_API_BASE_URL`, defaults to `/api`):
+- `GET /news/stories?period=&region=&topic=` — story list (re-fetches when filters change)
+- `GET /news/stories/:id` — story detail (fetched on story select)
+- `GET /news/sources` — source metadata with bias ratings
+- `GET /news/analytics/top-locations?interval=hourly` — trending location data with time series
+- `GET /news/analytics/top-people?interval=hourly` — trending people data with time series
 
-Falls back to local JSON files (`src/data/stories.json`, `src/data/landing.json`) when no API is configured.
+Falls back to local `src/data/stories.json` when API is unavailable.
+
+**LandingPage** uses static `src/data/landing.json` (region-keyed stories and indices).
 
 **API proxy**: Dev server proxies `/api/*` to `http://127.0.0.1:8000` (strips `/api` prefix).
 
 ### Key Components
 
-- **NewsMap** (`react-simple-maps`): 2D Mercator map showing story locations. Uses `/countries.geojson` for centroid lookup and `/countries-110m.json` for rendering. Location matching handles country aliases (US, UK, UAE, etc.).
+- **NewsPage layout**: Left panel shows `NewsFilters` + `StoryList`, or `StoryView` when a story is selected. Right panel shows `AnalyticsOverview` (line graphs for trending locations/people), or `StoryViewEntities` + `StoryMap` when viewing a story.
 
-- **LandingPage Globe** (`react-globe.gl` / Three.js): Auto-rotating 3D globe cycling through regions every 8 seconds.
+- **LandingPage Globe** (`react-globe.gl` / Three.js): Auto-rotating 3D globe cycling through `REGION_STOPS` every 8 seconds with fade transitions.
 
-- **StoryView**: Tabbed view with Overview (summary, key points) and Coverage (articles list with bias bar).
+- **StoryView**: Tabbed view with Overview (summary, key points, timeline) and Coverage (articles list with bias bar).
 
-- **CoverageBiasBar**: Visualizes article source bias distribution (left → center → right) based on sources metadata.
+- **CoverageBiasBar**: Visualizes article source bias distribution (left → center → right).
+
+- **LineGraph**: Reusable Chart.js line chart wrapper used by `AnalyticsOverview`.
+
+- **StoryMap** (`react-simple-maps`): 2D Mercator map for individual story locations. Uses `/countries.geojson` for centroid lookup and `/countries-110m.json` for rendering.
 
 ### Shared Utilities (`src/lib/`)
 
-- **api.js**: API URL builder with `VITE_API_BASE_URL` support
-- **constants.js**: Shared constants (`LOCATION_ALIASES`, `BIAS_ORDER`, `BIAS_LABELS`, `REGION_STOPS`)
-- **dates.js**: Date parsing/formatting utilities (`formatArticleDate`, `formatStoryDate`, `sortArticlesByDate`, etc.)
+- **api.js**: `apiUrl(path)` builder — prepends `VITE_API_BASE_URL` (or `/api`)
+- **constants.js**: `LOCATION_ALIASES`, `BIAS_ORDER`, `BIAS_LABELS`, `REGION_STOPS`, `PERIOD_OPTIONS`, `REGION_OPTIONS`, `TOPIC_OPTIONS`
+- **dates.js**: Date parsing/formatting utilities
 - **normalize.js**: String normalization (`normalizeKey`, `normalizeBias`)
 
 ### Project Structure
 
-Uses directory-per-component pattern with CSS Modules:
-
-```
-src/
-  components/
-    ComponentName/
-      ComponentName.jsx
-      ComponentName.module.css
-      index.js              # re-exports for cleaner imports
-  pages/
-    PageName/
-      PageName.jsx
-      PageName.module.css
-      index.js
-  lib/                      # shared utilities
-  styles/
-    globals.css             # CSS variables and reset
-```
+Directory-per-component pattern with CSS Modules. Each component has `ComponentName.jsx`, `ComponentName.module.css`, and `index.js` (re-export).
 
 ### CSS Architecture
 
-Uses CSS Modules for component-scoped styles with shared CSS variables:
-
-- **`src/styles/globals.css`**: CSS custom properties and reset (imported in `main.jsx`)
-- **`*.module.css`**: Component/page-specific styles (co-located in each component directory)
-
-Key CSS variable prefixes in `:root`:
+CSS Modules with shared CSS variables defined in `src/styles/globals.css`:
 - `--color-brand`, `--color-accent-*`: Brand colors
-- `--color-bg-*`: Background colors
-- `--color-border-*`: Border colors
-- `--color-text-*`: Text colors
+- `--color-bg-*`, `--color-border-*`, `--color-text-*`: Theme tokens
 - `--color-bias-*`: Bias visualization colors
 
 ### Data Structures
 
-Stories have: `story_id`, `title`, `summary`, `key_points[]`, `primary_location`, `articles[]`, `sub_stories[]`, `updated_at`
+Stories: `story_id`, `title`, `summary`, `key_points[]`, `primary_location`, `articles[]`, `sub_stories[]`, `updated_at`
 
-Articles have: `article_id`, `headline`, `source`, `published_at`
+Articles: `article_id`, `headline`, `source`, `published_at`
 
-Sources have: `source`/`name`, `bias` (left, leans-left, center, leans-right, right)
+Sources: `source`/`name`, `bias` (left, leans-left, center, leans-right, right)

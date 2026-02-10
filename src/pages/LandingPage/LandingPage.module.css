@@ -1,52 +1,19 @@
 .container {
+  background: var(--color-bg-dark);
+  background-image: url('/landing-bg.png');
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: 100% 50vh;
+  background-attachment: fixed;
+}
+
+.hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 100vh;
-  background: var(--color-bg-dark);
 }
 
-.nav {
-  width: 100%;
-  height: 1in;
-  border-bottom: 1px solid var(--color-border);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-}
-
-.navTitle {
-  color: var(--color-text-light);
-  font-size: 20px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: default;
-}
-
-.navLinks {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-}
-
-.navLink {
-  background: none;
-  border: none;
-  color: var(--color-text-light);
-  font-size: 14px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 0;
-  border-bottom: 1px solid transparent;
-  cursor: pointer;
-}
-
-.navLink:hover {
-  border-bottom-color: var(--color-brand);
-}
 
 .content {
   display: flex;
@@ -55,13 +22,10 @@
   position: relative;
   width: 100%;
   z-index: 1;
-  background-image: url('/landing-bg.png');
-  background-repeat: no-repeat;
-  background-position: bottom center;
-  background-size: 100% 50%;
 }
 
-.content::before {
+.content::before,
+.lowerSection::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -139,7 +103,8 @@
   gap: 8px;
   font-size: 16px;
   letter-spacing: 0.12em;
-  border-bottom: 1px solid var(--color-white);
+  border-bottom: 2px solid var(--color-white);
+  position: relative;
 }
 
 .regionName {
@@ -180,6 +145,26 @@
 
 .indexArrowDown {
   color: var(--color-brand);
+}
+
+.progressTrack {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+}
+
+.progressBar {
+  height: 100%;
+  width: 0;
+  background: var(--color-brand);
+  animation: fillProgress 8s linear forwards;
+}
+
+@keyframes fillProgress {
+  from { width: 0; }
+  to { width: 100%; }
 }
 
 .storyRow {
@@ -245,4 +230,82 @@
 .actionButton:hover {
   color: var(--color-brand);
   border-color: var(--color-brand);
+}
+
+.lowerSection {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  border-top: 1px solid var(--color-border);
+  position: relative;
+}
+
+.footer {
+  width: 100%;
+  height: 1in;
+  background: var(--color-bg-dark);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.footerSocials {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.footerIconLink {
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  transition: color 180ms ease;
+}
+
+.footerIconLink:hover {
+  color: var(--color-brand);
+}
+
+.footerIcon {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.footerIconX {
+  transform: scale(0.88);
+}
+
+.boxRow {
+  width: min(1200px, 100%);
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+:global(html.landingNoScrollbar) {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:global(body.landingNoScrollbar) {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:global(html.landingNoScrollbar::-webkit-scrollbar),
+:global(body.landingNoScrollbar::-webkit-scrollbar) {
+  width: 0;
+  height: 0;
 }
