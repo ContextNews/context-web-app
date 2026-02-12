@@ -173,7 +173,7 @@
   justify-content: center;
 }
 
-.storyRow::before {
+.storyRow:has(.storyTitle)::before {
   content: '';
   position: absolute;
   left: 12px;

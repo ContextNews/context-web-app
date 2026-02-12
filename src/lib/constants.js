@@ -66,11 +66,11 @@ export const BIAS_LABELS = {
  * Globe animation waypoints for landing page
  */
 export const REGION_STOPS = [
-  { name: 'South America', lat: -15, lng: -60 },
-  { name: 'North America', lat: 40, lng: -100 },
-  { name: 'Europe', lat: 54, lng: 15 },
-  { name: 'Africa', lat: 10, lng: 20 },
-  { name: 'Middle East', lat: 28, lng: 45 },
-  { name: 'Asia', lat: 35, lng: 100 },
-  { name: 'Oceania', lat: -25, lng: 140 },
+  { name: 'North America', value: 'north_america', lat: 40, lng: -100 },
+  { name: 'Europe', value: 'europe', lat: 54, lng: 15 },
+  { name: 'Africa', value: 'africa', lat: 10, lng: 20 },
+  { name: 'Middle East', value: 'middle_east', lat: 28, lng: 45 },
+  { name: 'Asia', value: 'asia', lat: 35, lng: 100 },
+  { name: 'Oceania', value: 'oceania', lat: -25, lng: 140 },
+  { name: 'South America', value: 'south_america', lat: -15, lng: -60 },
 ]

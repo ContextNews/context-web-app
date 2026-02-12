@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Globe from 'react-globe.gl'
 import { feature } from 'topojson-client'
+import { apiUrl } from '../../lib/api'
 import { REGION_STOPS } from '../../lib/constants'
 import landingData from '../../data/landing.json'
 import LandingFeatureCard from '../../components/LandingFeatureCard'
@@ -44,12 +45,12 @@ function LandingPage() {
   const globeRef = useRef(null)
   const [globeSize, setGlobeSize] = useState(getGlobeSize)
   const [countries, setCountries] = useState([])
-  const [currentRegion, setCurrentRegion] = useState('South America')
-  const [displayRegion, setDisplayRegion] = useState('South America')
+  const [currentRegion, setCurrentRegion] = useState('North America')
+  const [displayRegion, setDisplayRegion] = useState('North America')
   const [isFading, setIsFading] = useState(false)
-  const regionData = landingData[displayRegion] || {}
-  const regionStories = regionData.stories || []
-  const regionIndices = regionData.indices || []
+  const [storiesMap, setStoriesMap] = useState({})
+  const regionStories = storiesMap[displayRegion] || []
+  const regionIndices = (landingData[displayRegion] || {}).indices || []
 
   const regionPoints = useMemo(
     () =>
@@ -66,6 +67,51 @@ function LandingPage() {
     updateSize()
     window.addEventListener('resize', updateSize)
     return () => window.removeEventListener('resize', updateSize)
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    async function loadStories() {
+      try {
+        const url = apiUrl('/landing/top-stories')
+        console.log('[LandingPage] Fetching top stories from', url)
+        const res = await fetch(url)
+        if (!res.ok) throw new Error(`Request failed: ${res.status}`)
+        const data = await res.json()
+        if (isMounted) {
+          const map = {}
+          for (const entry of data) {
+            const stop = REGION_STOPS.find((s) => s.value === entry.region)
+            if (!stop) continue
+            map[stop.name] = entry.stories.map((s) => {
+              const loc = s.locations?.[0]
+              let locationName = loc?.name ?? ''
+              if (loc && loc.location_type !== 'country' && loc.country_code) {
+                locationName = `${loc.country_code}, ${locationName}`
+              }
+              return {
+                story_id: s.story_id,
+                title: s.title,
+                location: locationName,
+                coordinates: { lat: loc?.latitude ?? 0, lng: loc?.longitude ?? 0 },
+              }
+            })
+          }
+          setStoriesMap(map)
+        }
+      } catch (err) {
+        console.error('[LandingPage] Top stories request failed', err)
+        if (isMounted) {
+          const fallback = {}
+          for (const [region, val] of Object.entries(landingData)) {
+            fallback[region] = val.stories || []
+          }
+          setStoriesMap(fallback)
+        }
+      }
+    }
+    loadStories()
+    return () => { isMounted = false }
   }, [])
 
   useEffect(() => {
@@ -156,16 +202,23 @@ function LandingPage() {
                   <div key={currentRegion} className={styles.progressBar} />
                 </div>
               </div>
-              {regionStories.slice(0, 3).map((story) => (
-                <div key={story.title} className={`${styles.regionRow} ${styles.storyRow}`}>
-                  <div className={`${styles.storyTitle} ${styles.fadeText}`}>
-                    {story.title}
+              {[0, 1, 2].map((i) => {
+                const story = regionStories[i]
+                return (
+                  <div key={i} className={`${styles.regionRow} ${styles.storyRow}`}>
+                    {story ? (
+                      <>
+                        <div className={`${styles.storyTitle} ${styles.fadeText}`}>
+                          {story.title}
+                        </div>
+                        <div className={`${styles.storyLocation} ${styles.fadeText}`}>
+                          {story.location}
+                        </div>
+                      </>
+                    ) : null}
                   </div>
-                  <div className={`${styles.storyLocation} ${styles.fadeText}`}>
-                    {story.location}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
               <div className={`${styles.regionRow} ${styles.placeholderRow}`} />
               <div className={`${styles.regionRow} ${styles.actionsRow}`}>
                 <a href="/news" className={styles.actionButton}>
