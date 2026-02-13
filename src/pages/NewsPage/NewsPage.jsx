@@ -38,7 +38,7 @@ function NewsPage() {
           setSelectedStory(detail)
         }
       } catch (error) {
-        console.error('[NewsPage] Story detail fetch failed', error)
+        console.error('[NewsPage] Story detail fetch failed, keeping summary', error)
       }
     }
   }

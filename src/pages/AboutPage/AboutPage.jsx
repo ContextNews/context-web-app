@@ -31,7 +31,7 @@ const TABS = [
 
 function AboutPage() {
   const [activeTab, setActiveTab] = useState('about')
-  const current = TABS.find((t) => t.key === activeTab)
+  const current = TABS.find((t) => t.key === activeTab) ?? TABS[0]
 
   return (
     <div className={styles.container}>

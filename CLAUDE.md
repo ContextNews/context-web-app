@@ -24,6 +24,8 @@ React 18 + Vite news aggregation web app with geographic visualization.
 Simple path-based routing in `App.jsx` (no router library). All pages wrapped in `MobileBlocker`:
 - `/` → LandingPage (animated 3D globe with regional news preview)
 - `/news` → NewsPage (full news interface with story list, map, and analytics)
+- `/data` → DataPage (placeholder)
+- `/about` → AboutPage (tabbed info pages with images)
 
 ### Data Flow
 
@@ -36,7 +38,7 @@ Simple path-based routing in `App.jsx` (no router library). All pages wrapped in
 
 Falls back to local `src/data/stories.json` when API is unavailable.
 
-**LandingPage** uses static `src/data/landing.json` (region-keyed stories and indices).
+**LandingPage** fetches top stories from `GET /landing/top-stories` (array of `{ region, stories }` with snake_case region values). Stories are transformed to display-name keys using `REGION_STOPS`. Falls back to static `src/data/landing.json` when API is unavailable. Regional indices remain static from `landing.json`.
 
 **API proxy**: Dev server proxies `/api/*` to `http://127.0.0.1:8000` (strips `/api` prefix).
 

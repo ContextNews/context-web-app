@@ -63,7 +63,7 @@ function NewsFilters({ region, onRegionChange, period, onPeriodChange, topic, on
                     type="button"
                     className={`${styles.option} ${option.value === region ? styles.selected : ''}`}
                     onClick={() => {
-                      onRegionChange(option.value)
+                      onRegionChange?.(option.value)
                     }}
                   >
                     {option.label}
@@ -99,7 +99,7 @@ function NewsFilters({ region, onRegionChange, period, onPeriodChange, topic, on
                     type="button"
                     className={`${styles.option} ${option.value === period ? styles.selected : ''}`}
                     onClick={() => {
-                      onPeriodChange(option.value)
+                      onPeriodChange?.(option.value)
                     }}
                   >
                     {option.label}
