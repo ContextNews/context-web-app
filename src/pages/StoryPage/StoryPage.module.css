@@ -1,0 +1,112 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--color-bg-dark);
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.leftPanel {
+  flex: 0 0 40%;
+  overflow-y: auto;
+  background: var(--color-bg-dark);
+  scrollbar-width: none;
+}
+
+.leftPanel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.rightPanel {
+  flex: 0 0 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.storyRightLayout {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.storyRightTopRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.storyRightTopRow .storyRightBox {
+  flex: 1;
+  border: none;
+}
+
+.storyRightBox {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  box-sizing: border-box;
+}
+
+.storyRightTopRow .storyRightBox:last-child {
+  border-left: 1px solid var(--color-border);
+}
+
+.storyRightLayout > .storyRightBox {
+  border-top: 1px solid var(--color-border);
+}
+
+.rightPlaceholder {
+  flex: 1;
+  min-height: 0;
+  background: var(--color-bg-dark);
+}
+
+.status {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.statusWrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--color-text-light);
+  padding: 24px;
+}
+
+.statusTitle {
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.backButton {
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-light);
+  padding: 8px 12px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.backButton:hover {
+  border-color: var(--color-text-light);
+}

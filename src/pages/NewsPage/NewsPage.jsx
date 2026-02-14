@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import AnalyticsOverview from '../../components/AnalyticsOverview'
 import StoryList from '../../components/StoryList'
-import StoryView from '../../components/StoryView'
-import StoryViewEntities from '../../components/StoryViewEntities'
-import StoryMap from '../../components/StoryMap'
 import NewsFilters from '../../components/NewsFilters'
 import NavBar from '../../components/NavBar'
 import stories from '../../data/stories.json'
@@ -11,36 +9,19 @@ import { apiUrl } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
 function NewsPage() {
+  const navigate = useNavigate()
   const [storiesData, setStoriesData] = useState([])
   const [loadError, setLoadError] = useState('')
-  const [selectedStory, setSelectedStory] = useState(null)
-  const [sourcesData, setSourcesData] = useState([])
   const [topLocations, setTopLocations] = useState([])
   const [topPeople, setTopPeople] = useState([])
   const [period, setPeriod] = useState('today')
   const [region, setRegion] = useState('')
   const [topic, setTopic] = useState('')
 
-  const handleStorySelect = async (story) => {
+  const handleStorySelect = (story) => {
     const storyId = story?.story_id ?? story?.id ?? null
-    console.info('[NewsPage] Story selected', {
-      storyId,
-      title: story?.title ?? null,
-    })
-    setSelectedStory(story)
-
-    if (storyId) {
-      try {
-        const url = apiUrl(`/news/stories/${storyId}`)
-        const response = await fetch(url)
-        if (response.ok) {
-          const detail = await response.json()
-          setSelectedStory(detail)
-        }
-      } catch (error) {
-        console.error('[NewsPage] Story detail fetch failed, keeping summary', error)
-      }
-    }
+    if (!storyId) return
+    navigate(`/news/story/${encodeURIComponent(storyId)}`)
   }
 
   useEffect(() => {
@@ -86,40 +67,6 @@ function NewsPage() {
       isMounted = false
     }
   }, [period, region, topic])
-
-  useEffect(() => {
-    let isMounted = true
-
-    async function loadSources() {
-      try {
-        const url = apiUrl('/news/sources')
-        console.info('[NewsPage] Fetching sources_data', { url })
-        const response = await fetch(url)
-        if (!response.ok) {
-          throw new Error(`Request failed: ${response.status}`)
-        }
-        const data = await response.json()
-
-        if (isMounted) {
-          console.info('[NewsPage] Sources loaded', {
-            count: Array.isArray(data) ? data.length : 0,
-          })
-          setSourcesData(Array.isArray(data) ? data : [])
-        }
-      } catch (error) {
-        if (isMounted) {
-          console.error('[NewsPage] Sources request failed', error)
-          setSourcesData([])
-        }
-      }
-    }
-
-    loadSources()
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   useEffect(() => {
     let isMounted = true
@@ -324,46 +271,21 @@ function NewsPage() {
       <NavBar />
       <div className={styles.content}>
         <div className={styles.leftPanel}>
-          
-          {selectedStory ? (
-            <StoryView
-              story={selectedStory}
-              onBack={() => setSelectedStory(null)}
-              sourcesData={sourcesData}
-            />
-          ) : (
-            <>
-              <NewsFilters region={region} onRegionChange={setRegion} period={period} onPeriodChange={setPeriod} topic={topic} onTopicChange={setTopic} />
-              <StoryList
-                storiesData={storiesData}
-                loadError={loadError}
-                onStorySelect={handleStorySelect}
-              />
-            </>
-          )}
+          <NewsFilters region={region} onRegionChange={setRegion} period={period} onPeriodChange={setPeriod} topic={topic} onTopicChange={setTopic} />
+          <StoryList
+            storiesData={storiesData}
+            loadError={loadError}
+            onStorySelect={handleStorySelect}
+          />
         </div>
         <div className={styles.rightPanel}>
-          {selectedStory ? (
-            <div className={styles.storyRightLayout}>
-              <div className={styles.storyRightTopRow}>
-                <div className={styles.storyRightBox}>
-                  <StoryViewEntities story={selectedStory} />
-                </div>
-                <div className={styles.storyRightBox}>
-                  <StoryMap story={selectedStory} />
-                </div>
-              </div>
-              <div className={styles.storyRightBox} />
-            </div>
-          ) : (
-            <AnalyticsOverview
-              stories={storiesData}
-              topLocations={topLocations}
-              topLocationSeries={topLocationSeries}
-              topPeopleSeries={topPeopleSeries}
-              region={region}
-            />
-          )}
+          <AnalyticsOverview
+            stories={storiesData}
+            topLocations={topLocations}
+            topLocationSeries={topLocationSeries}
+            topPeopleSeries={topPeopleSeries}
+            region={region}
+          />
         </div>
       </div>
     </div>

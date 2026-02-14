@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import AuthModal from '../AuthModal'
 import styles from './NavBar.module.css'
 
@@ -8,7 +9,7 @@ function NavBar() {
   return (
     <>
       <div className={styles.nav}>
-        <a href="/" className={styles.navTitle}>Context</a>
+        <Link to="/" className={styles.navTitle}>Context</Link>
         <div className={styles.navActions}>
           <button
             type="button"
