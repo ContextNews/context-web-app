@@ -130,6 +130,12 @@
     rgba(245, 245, 245, 0.85) 50%,
     transparent 51%
   );
+  transition: transform 180ms ease;
+  transform-origin: center;
+}
+
+.card:hover .chevron {
+  transform: rotate(45deg);
 }
 
 .subStoryRow {
