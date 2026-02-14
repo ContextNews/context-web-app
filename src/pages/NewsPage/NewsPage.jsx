@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AnalyticsOverview from '../../components/AnalyticsOverview'
 import StoryList from '../../components/StoryList'
@@ -9,11 +9,15 @@ import { apiUrl } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
 const ANALYTICS_PERIOD = 'last_24_hours'
+const PAGE_SIZE = 25
 
 function NewsPage() {
   const navigate = useNavigate()
   const [storiesData, setStoriesData] = useState([])
   const [loadError, setLoadError] = useState('')
+  const [offset, setOffset] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [topLocations, setTopLocations] = useState([])
   const [topPeople, setTopPeople] = useState([])
   const [period, setPeriod] = useState('today')
@@ -30,17 +34,20 @@ function NewsPage() {
     let isMounted = true
 
     async function loadStories() {
-      console.info('[NewsPage] API base', { apiBase: apiUrl('') })
+      setStoriesData([])
+      setOffset(0)
+      setHasMore(false)
+      setLoadError('')
 
       try {
-        const params = new URLSearchParams({ period })
+        const params = new URLSearchParams({ period, limit: PAGE_SIZE, offset: 0 })
         if (region) {
           params.set('region', region)
         }
         if (topic) {
           params.set('topic', topic)
         }
-        const url = apiUrl(`/news/stories?${params}`)
+        const url = apiUrl(`/news/stories/news-feed?${params}`)
         console.info('[NewsPage] Fetching stories', { url, period, region, topic })
         const response = await fetch(url)
         if (!response.ok) {
@@ -49,16 +56,18 @@ function NewsPage() {
         const data = await response.json()
 
         if (isMounted) {
-          console.info('[NewsPage] Stories loaded', {
-            count: Array.isArray(data) ? data.length : 0,
-          })
-          setStoriesData(Array.isArray(data) ? data : [])
+          const loaded = Array.isArray(data.stories) ? data.stories : []
+          console.info('[NewsPage] Stories loaded', { count: loaded.length, has_more: data.has_more })
+          setStoriesData(loaded)
+          setHasMore(!!data.has_more)
+          setOffset(PAGE_SIZE)
         }
       } catch (error) {
         if (isMounted) {
           console.error('[NewsPage] Stories request failed', error)
           setLoadError(error instanceof Error ? error.message : 'Request failed')
           setStoriesData(stories)
+          setHasMore(false)
         }
       }
     }
@@ -69,6 +78,31 @@ function NewsPage() {
       isMounted = false
     }
   }, [period, region, topic])
+
+  const loadMore = useCallback(async () => {
+    if (!hasMore || isLoadingMore) return
+    setIsLoadingMore(true)
+
+    try {
+      const params = new URLSearchParams({ period, limit: PAGE_SIZE, offset })
+      if (region) params.set('region', region)
+      if (topic) params.set('topic', topic)
+      const url = apiUrl(`/news/stories/news-feed?${params}`)
+      console.info('[NewsPage] Loading more stories', { url, offset })
+      const response = await fetch(url)
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`)
+      const data = await response.json()
+
+      const newStories = Array.isArray(data.stories) ? data.stories : []
+      setStoriesData((prev) => [...prev, ...newStories])
+      setHasMore(!!data.has_more)
+      setOffset((prev) => prev + PAGE_SIZE)
+    } catch (error) {
+      console.error('[NewsPage] Load more failed', error)
+    } finally {
+      setIsLoadingMore(false)
+    }
+  }, [offset, hasMore, isLoadingMore, period, region, topic])
 
   useEffect(() => {
     let isMounted = true
@@ -278,6 +312,9 @@ function NewsPage() {
             storiesData={storiesData}
             loadError={loadError}
             onStorySelect={handleStorySelect}
+            hasMore={hasMore}
+            isLoadingMore={isLoadingMore}
+            onLoadMore={loadMore}
           />
         </div>
         <div className={styles.rightPanel}>
