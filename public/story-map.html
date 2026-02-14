@@ -41,37 +41,123 @@
     ></script>
     <script>
       const params = new URLSearchParams(window.location.search)
-      const lat = Number(params.get('lat'))
-      const lon = Number(params.get('lon'))
-      const zoomParam = Number(params.get('zoom'))
-      const zoom = Number.isFinite(zoomParam) ? zoomParam : 5
+      const toNumber = (value) => {
+        const parsed = Number(value)
+        return Number.isFinite(parsed) ? parsed : null
+      }
 
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      const parseMarkers = (value) => {
+        if (!value) return []
+        try {
+          const parsed = JSON.parse(value)
+          if (!Array.isArray(parsed)) return []
+          return parsed
+            .map((marker) => {
+              const lat = toNumber(marker?.lat)
+              const lon = toNumber(marker?.lon)
+              if (lat === null || lon === null) return null
+              const count = Math.max(1, Math.round(toNumber(marker?.count) || 1))
+              const radius = Math.max(3, Math.min(14, Math.round(toNumber(marker?.radius) || 6)))
+              return {
+                lat,
+                lon,
+                name: typeof marker?.name === 'string' ? marker.name : '',
+                count,
+                radius,
+              }
+            })
+            .filter(Boolean)
+        } catch {
+          return []
+        }
+      }
+
+      const lat = toNumber(params.get('lat'))
+      const lon = toNumber(params.get('lon'))
+      const zoomParam = toNumber(params.get('zoom'))
+      const minGlobalZoom = 2
+      const zoom = Math.max(minGlobalZoom, zoomParam === null ? 5 : zoomParam)
+      const fitMarkers = params.get('fit') !== '0'
+      const markers = parseMarkers(params.get('markers'))
+
+      if (markers.length === 0 && (lat === null || lon === null)) {
         document.body.innerHTML = ''
         document.body.style.background = '#111315'
       } else {
+        const initialCenter =
+          lat !== null && lon !== null
+            ? [lat, lon]
+            : [markers[0].lat, markers[0].lon]
         const map = L.map('map', {
-          center: [lat, lon],
+          center: initialCenter,
           zoom,
+          minZoom: minGlobalZoom,
           zoomControl: false,
           attributionControl: true,
           preferCanvas: true,
+          maxBounds: [
+            [-85, -180],
+            [85, 180],
+          ],
+          maxBoundsViscosity: 1.0,
         })
         map.attributionControl.setPrefix(false)
 
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
           maxZoom: 19,
+          noWrap: true,
           attribution:
             '&copy; OpenStreetMap contributors &copy; CARTO',
         }).addTo(map)
 
-        L.circleMarker([lat, lon], {
-          radius: 6,
-          color: '#9ed0ff',
-          weight: 1.5,
-          fillColor: '#9ed0ff',
-          fillOpacity: 0.35,
-        }).addTo(map)
+        if (markers.length > 0) {
+          const markerLatLngs = []
+
+          markers.forEach((marker) => {
+            const circle = L.circleMarker([marker.lat, marker.lon], {
+              radius: marker.radius,
+              color: '#9ed0ff',
+              weight: 1.5,
+              fillColor: '#9ed0ff',
+              fillOpacity: 0.35,
+            }).addTo(map)
+
+            if (marker.name) {
+              circle.bindTooltip(`${marker.name} (${marker.count})`, {
+                direction: 'top',
+                offset: [0, -8],
+                opacity: 0.9,
+              })
+            }
+
+            markerLatLngs.push([marker.lat, marker.lon])
+          })
+
+          if (fitMarkers && markerLatLngs.length > 1) {
+            const bounds = L.latLngBounds(markerLatLngs)
+            if (bounds.isValid()) {
+              map.fitBounds(bounds.pad(0.25), { maxZoom: 5 })
+              if (map.getZoom() < minGlobalZoom) {
+                map.setZoom(minGlobalZoom)
+              }
+            }
+          } else if (fitMarkers && markerLatLngs.length === 1) {
+            map.setView(markerLatLngs[0], 5)
+          }
+        } else {
+          L.circleMarker([lat, lon], {
+            radius: 6,
+            color: '#9ed0ff',
+            weight: 1.5,
+            fillColor: '#9ed0ff',
+            fillOpacity: 0.35,
+          }).addTo(map)
+        }
+
+        const refreshSize = () => map.invalidateSize()
+        window.addEventListener('resize', refreshSize)
+        requestAnimationFrame(refreshSize)
+        setTimeout(refreshSize, 120)
       }
     </script>
   </body>

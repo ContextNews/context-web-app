@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { buildStoryMapUrl } from '../../lib/storyMapUrl'
 import styles from './StoryMap.module.css'
 
 const toNumber = (value) => {
@@ -12,18 +13,8 @@ function StoryMap({ story }) {
   const longitude = toNumber(primaryLocation?.longitude)
 
   const mapData = useMemo(() => {
-    if (latitude === null || longitude === null) {
-      return null
-    }
-
-    const params = new URLSearchParams({
-      lat: String(latitude),
-      lon: String(longitude),
-      zoom: '5',
-    })
-    const src = `/story-map.html?${params.toString()}`
-
-    return { src }
+    const src = buildStoryMapUrl({ lat: latitude, lon: longitude, zoom: 5 })
+    return src ? { src } : null
   }, [latitude, longitude])
 
   return (
