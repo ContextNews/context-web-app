@@ -8,6 +8,8 @@ import stories from '../../data/stories.json'
 import { apiUrl } from '../../lib/api'
 import styles from './NewsPage.module.css'
 
+const ANALYTICS_PERIOD = 'last_24_hours'
+
 function NewsPage() {
   const navigate = useNavigate()
   const [storiesData, setStoriesData] = useState([])
@@ -73,7 +75,7 @@ function NewsPage() {
 
     async function loadTopLocations() {
       try {
-        const url = apiUrl('/news/analytics/top-locations?interval=hourly')
+        const url = apiUrl(`/news/analytics/top-locations?interval=hourly&period=${ANALYTICS_PERIOD}`)
         console.info('[NewsPage] Fetching top-locations', { url })
         const response = await fetch(url)
         if (!response.ok) {
@@ -115,7 +117,7 @@ function NewsPage() {
 
     async function loadTopPeople() {
       try {
-        const url = apiUrl('/news/analytics/top-people?interval=hourly')
+        const url = apiUrl(`/news/analytics/top-people?interval=hourly&period=${ANALYTICS_PERIOD}`)
         console.info('[NewsPage] Fetching top-people', { url })
         const response = await fetch(url)
         if (!response.ok) {
