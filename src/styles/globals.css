@@ -31,11 +31,11 @@
   --color-hover-dark: #1f1e22;
 
   /* Bias colors */
-  --color-bias-left: #e21a41;
-  --color-bias-leans-left: rgba(226, 26, 65, 0.45);
+  --color-bias-left: rgba(226, 26, 65, 0.45);
+  --color-bias-leans-left: #e21a41;
   --color-bias-center: #f5f5f5;
-  --color-bias-leans-right: rgba(126, 203, 255, 0.45);
-  --color-bias-right: #7ecbff;
+  --color-bias-leans-right: #7ecbff;
+  --color-bias-right: rgba(126, 203, 255, 0.45);
   --color-bias-bar-bg: #0f0e11;
 
   /* Utility colors */
