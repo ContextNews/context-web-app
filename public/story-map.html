@@ -78,6 +78,7 @@
       const minGlobalZoom = 2
       const zoom = Math.max(minGlobalZoom, zoomParam === null ? 5 : zoomParam)
       const fitMarkers = params.get('fit') !== '0'
+      // URL-param markers used as fallback (e.g. single-marker StoryMap case)
       const markers = parseMarkers(params.get('markers'))
 
       if (markers.length === 0 && (lat === null || lon === null)) {
@@ -110,17 +111,21 @@
             '&copy; OpenStreetMap contributors &copy; CARTO',
         }).addTo(map)
 
-        if (markers.length > 0) {
-          const markerLatLngs = []
+        // Shared layer group for markers (allows clearing + re-rendering)
+        const markerLayer = L.layerGroup().addTo(map)
 
-          markers.forEach((marker) => {
+        function renderMarkers(list, fit) {
+          markerLayer.clearLayers()
+          const latLngs = []
+
+          list.forEach((marker) => {
             const circle = L.circleMarker([marker.lat, marker.lon], {
               radius: marker.radius,
               color: '#9ed0ff',
               weight: 1.5,
               fillColor: '#9ed0ff',
               fillOpacity: 0.35,
-            }).addTo(map)
+            }).addTo(markerLayer)
 
             if (marker.name) {
               circle.bindTooltip(`${marker.name} (${marker.count})`, {
@@ -130,29 +135,44 @@
               })
             }
 
-            markerLatLngs.push([marker.lat, marker.lon])
+            latLngs.push([marker.lat, marker.lon])
           })
 
-          if (fitMarkers && markerLatLngs.length > 1) {
-            const bounds = L.latLngBounds(markerLatLngs)
+          if (fit && latLngs.length > 1) {
+            const bounds = L.latLngBounds(latLngs)
             if (bounds.isValid()) {
               map.fitBounds(bounds.pad(0.25), { maxZoom: 5 })
               if (map.getZoom() < minGlobalZoom) {
                 map.setZoom(minGlobalZoom)
               }
             }
-          } else if (fitMarkers && markerLatLngs.length === 1) {
-            map.setView(markerLatLngs[0], 5)
+          } else if (fit && latLngs.length === 1) {
+            map.setView(latLngs[0], 5)
           }
-        } else {
+        }
+
+        if (markers.length > 0) {
+          renderMarkers(markers, fitMarkers)
+        } else if (fitMarkers && lat !== null && lon !== null) {
+          // Single-point fallback (buildStoryMapUrl path only, not postMessage)
           L.circleMarker([lat, lon], {
             radius: 6,
             color: '#9ed0ff',
             weight: 1.5,
             fillColor: '#9ed0ff',
             fillOpacity: 0.35,
-          }).addTo(map)
+          }).addTo(markerLayer)
         }
+
+        // Listen for marker data via postMessage (avoids URL length limits)
+        window.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'markers' && Array.isArray(event.data.markers)) {
+            const posted = parseMarkers(JSON.stringify(event.data.markers))
+            if (posted.length > 0) {
+              renderMarkers(posted, fitMarkers)
+            }
+          }
+        })
 
         const refreshSize = () => map.invalidateSize()
         window.addEventListener('resize', refreshSize)

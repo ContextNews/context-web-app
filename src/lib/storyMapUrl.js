@@ -50,15 +50,13 @@ export function buildStoryMarkersMapUrl({ markers = [], region = '' }) {
 
   if (cleanedMarkers.length === 0) return null
 
+  const regionView = REGION_VIEW_CONFIG[region] || REGION_VIEW_CONFIG['']
   const params = new URLSearchParams({
-    markers: JSON.stringify(cleanedMarkers),
+    lat: String(regionView.lat),
+    lon: String(regionView.lon),
+    zoom: String(regionView.zoom),
+    fit: '0',
   })
 
-  const regionView = REGION_VIEW_CONFIG[region] || REGION_VIEW_CONFIG['']
-  params.set('lat', String(regionView.lat))
-  params.set('lon', String(regionView.lon))
-  params.set('zoom', String(regionView.zoom))
-  params.set('fit', '0')
-
-  return `/story-map.html?${params.toString()}`
+  return { src: `/story-map.html?${params.toString()}`, markers: cleanedMarkers }
 }
