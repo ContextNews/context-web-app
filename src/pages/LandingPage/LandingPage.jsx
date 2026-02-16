@@ -272,7 +272,7 @@ function LandingPage() {
         </div>
       </section>
       <footer className={styles.footer}>
-        <div className={styles.footerSocials}>
+<div className={styles.footerSocials}>
           <a
             href="https://x.com"
             target="_blank"
